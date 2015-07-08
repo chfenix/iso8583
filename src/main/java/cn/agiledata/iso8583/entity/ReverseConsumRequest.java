@@ -7,14 +7,15 @@ import org.apache.commons.lang3.StringUtils;
 import cn.agiledata.iso8583.MessageFactory;
 
 /**
- * 消费请求报文
+ * 消费冲正请求报文
  * 
  * @author zln
  *
  */
-public class ConsumRequest extends AbstractRequestMsg {
+public class ReverseConsumRequest extends AbstractRequestMsg {
 
-	private static final long serialVersionUID = 2069184814100605630L;
+	private static final long serialVersionUID = -6500452916955431281L;
+	
 
 	/*
 	 * 主账号
@@ -52,19 +53,9 @@ public class ConsumRequest extends AbstractRequestMsg {
 	private String conditionMode;
 	
 	/*
-	 * 服务点PIN获取码
+	 * 冲正原因
 	 */
-	private String pinCaptureCode;
-	
-	/*
-	 * 2磁道数据
-	 */
-	private String track2Data;
-	
-	/*
-	 * 3磁道数据
-	 */
-	private String track3Data;
+	private String respCode;
 	
 	/*
 	 * 终端号
@@ -87,16 +78,6 @@ public class ConsumRequest extends AbstractRequestMsg {
 	private String currency;
 	
 	/*
-	 * PIN
-	 */
-	private String pinData;
-	
-	/*
-	 * 安全控制信息
-	 */
-	private String securityInfo;
-	
-	/*
 	 * MAC
 	 */
 	private String mac;
@@ -113,8 +94,8 @@ public class ConsumRequest extends AbstractRequestMsg {
 	
 	private String reserved60;
 
-	public ConsumRequest() {
-		this.code = MessageFactory.TRANS_CODE_CONSUM;
+	public ReverseConsumRequest() {
+		this.code = MessageFactory.TRANS_CODE_REVERSE_CONSUM;
 	}
 
 	public String getPrimaryAcctNo() {
@@ -182,36 +163,13 @@ public class ConsumRequest extends AbstractRequestMsg {
 	public void setConditionMode(String conditionMode) {
 		this.conditionMode = conditionMode;
 	}
-
-	public String getPinCaptureCode() {
-		return pinCaptureCode;
+	
+	public String getRespCode() {
+		return respCode;
 	}
 
-	public void setPinCaptureCode(String pinCaptureCode) {
-		this.pinCaptureCode = pinCaptureCode;
-	}
-
-	public String getTrack2Data() {
-		// 转换二磁信息中的等号为D，便于进行BCD压缩
-		if(StringUtils.isNotBlank(track2Data) && track2Data.indexOf("=") > 0) {
-			track2Data = track2Data.replace("=", "D");
-			return track2Data;
-		}
-		else {
-			return track2Data;
-		}
-	}
-
-	public void setTrack2Data(String track2Data) {
-		this.track2Data = track2Data;
-	}
-
-	public String getTrack3Data() {
-		return track3Data;
-	}
-
-	public void setTrack3Data(String track3Data) {
-		this.track3Data = track3Data;
+	public void setRespCode(String respCode) {
+		this.respCode = respCode;
 	}
 
 	public String getTerminalNo() {
@@ -244,22 +202,6 @@ public class ConsumRequest extends AbstractRequestMsg {
 
 	public void setCurrency(String currency) {
 		this.currency = currency;
-	}
-
-	public String getPinData() {
-		return pinData;
-	}
-
-	public void setPinData(String pinData) {
-		this.pinData = pinData;
-	}
-
-	public String getSecurityInfo() {
-		return securityInfo;
-	}
-
-	public void setSecurityInfo(String securityInfo) {
-		this.securityInfo = securityInfo;
 	}
 
 	public String getMac() {
@@ -301,12 +243,12 @@ public class ConsumRequest extends AbstractRequestMsg {
 	 * 60.7	账户类型
 	 * @return
 	 */
-	/*public String getReserved60() {
+	public String getReserved60() {
 		if(StringUtils.isBlank(this.reserved60)) {
 			return transType + batchNo + "000";
 		}
 		else {
 			return reserved60;
 		}
-	}*/
+	}
 }

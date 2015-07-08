@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import cn.agiledata.iso8583.config.ISO8583Field;
 import cn.agiledata.iso8583.entity.AbstractRequestMsg;
 import cn.agiledata.iso8583.entity.AbstractResponseMsg;
+import cn.agiledata.iso8583.exception.ConfigErrorException;
 import cn.agiledata.iso8583.util.ISO8583Util;
 
 /**
@@ -280,10 +281,39 @@ public class Message8583 {
 	 * 
 	 * @param mapBody
 	 */
-	public void fillBodyData(AbstractRequestMsg requestMsg) throws Exception {
+	public void fillBodyData(AbstractRequestMsg requestMsg) throws ConfigErrorException,Exception {
 		
 		Map<String, Object> mapRequset = PropertyUtils.describe(requestMsg);
 		
+		// 检查域中是否有组合值设置
+		for (ISO8583Field objField : bodyData.values()) {
+			if(StringUtils.isNotBlank(objField.getCombo())) {
+				// 有组合域值，进行拼装
+				// 解析设置
+				StringBuffer sbValue = new StringBuffer();
+				String[] arrCombo = objField.getCombo().split("\\+");
+				for (int i = 0; i < arrCombo.length; i++) {
+					String strKey = arrCombo[i].trim();
+					if(strKey.startsWith("'") || strKey.endsWith("'")) {
+						// 判断是否有完整的单引号
+						if(!strKey.startsWith("'") || !strKey.endsWith("'")) {
+							throw new ConfigErrorException("combo config error![" + objField.getCombo() + "] index:" + objField.getIndex());
+						}
+						// 删除单引号,拼装值
+						sbValue.append(strKey.substring(1, strKey.length() - 1));
+					}
+					else {
+						// 非单引号，从传入数据中获取内容
+						if(mapRequset.get(strKey) != null) {
+							sbValue.append(mapRequset.get(strKey));
+						}
+					}
+				}
+				objField.setValue(sbValue.toString());
+			}
+		}
+		
+		// 根据配置别名赋值，注意必须放到组合值之后，防止对某个域明确赋值无效
 		for (Map.Entry<String, Object> entry : mapRequset.entrySet()) {
 			Integer index = bodyAliasIndex.get(entry.getKey());
 			if(index == null || entry.getValue() == null) {
@@ -293,6 +323,8 @@ public class Message8583 {
 			objField.setValue(entry.getValue().toString());
 			bodyData.put(index, objField);
 		}
+		
+		
 	}
 	
 	/**

@@ -42,6 +42,7 @@ public class MessageFactory {
 	 */
 	public static final String TRANS_CODE_SIGN = "sign";		// 签到
 	public static final String TRANS_CODE_CONSUM = "consum";	// 消费
+	public static final String TRANS_CODE_REVERSE_CONSUM = "reverseConsum";	// 消费冲正
 	public static final String TRANS_CODE_CANCEL = "cancel";	// 消费撤销
 	public static final String TRANS_CODE_REFUND = "refund";	//  退款
 	
@@ -98,6 +99,9 @@ public class MessageFactory {
 		
 		// Mac配置
 		objMessage.setMacSetting(config.getMac());
+		
+		// 反馈报文头定义长度
+		objMessage.setRespLen(configGroups.getRespLen());
 		
 		return objMessage;
 		

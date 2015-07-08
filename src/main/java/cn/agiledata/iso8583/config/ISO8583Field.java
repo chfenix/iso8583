@@ -4,9 +4,11 @@ import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import cn.agiledata.iso8583.ISO8583Constants;
+import cn.agiledata.iso8583.exception.EmptyValueException;
 import cn.agiledata.iso8583.util.BCDUtil;
 import cn.agiledata.iso8583.util.ISO8583Util;
 
@@ -59,6 +61,20 @@ public class ISO8583Field implements Serializable {
 	private String align;
 	
 	/*
+	 * 请求报文是否必须出现定义
+	 * M:必须出现
+	 * C:可不出现（默认）
+	 */
+	private String req;
+	
+	/*
+	 * 反馈报文是否必须出现定义
+	 * M:必须出现
+	 * C:可不出现（默认）
+	 */
+	private String resp;
+	
+	/*
 	 * 域数值
 	 */
 	private String value;
@@ -77,6 +93,11 @@ public class ISO8583Field implements Serializable {
 	 * 报文域别名
 	 */
 	private String alias;
+	
+	/*
+	 * 组合值
+	 */
+	private String combo;
 	
 	@XmlAttribute
 	public int getIndex() {
@@ -157,13 +178,47 @@ public class ISO8583Field implements Serializable {
 		this.alias = alias;
 	}
 	
+	@XmlAttribute
+	public String getReq() {
+		return req;
+	}
+
+	public void setReq(String req) {
+		this.req = req;
+	}
+
+	@XmlAttribute
+	public String getResp() {
+		return resp;
+	}
+
+	public void setResp(String resp) {
+		this.resp = resp;
+	}
+	
+	@XmlAttribute
+	public String getCombo() {
+		return combo;
+	}
+
+	public void setCombo(String combo) {
+		this.combo = combo;
+	}
+
 	/**
 	 * 构造byte数组数据
 	 */
 	public void build() {
 		
 		try {
-			// FIXME 根据配置是否为空检查数据
+			// 数据检查
+			if("M".equalsIgnoreCase(req)) {
+				// 必须输入检查
+				if(value == null) {
+					throw new EmptyValueException("the value of Field[" + index + "] is empty!");
+				}
+			}
+			
 			int intValueLen = value.length();
 			
 			// 超长值截断
@@ -173,22 +228,42 @@ public class ISO8583Field implements Serializable {
 			
 			// 定长字段补足长度
 			if(lengthType.equals(ISO8583Constants.LENGTH_TYPE_FIX) && intValueLen < length) {
-				// 左对齐，右补空格
-				if(align.equals(ISO8583Constants.ALIGN_RIGHTSPACE)) {
-					value = String.format("%-" + length + "s", value);
+				
+				if(StringUtils.isNotBlank(align)) {
+					// 左对齐，右补空格
+					if(align.equals(ISO8583Constants.ALIGN_RIGHTSPACE)) {
+						value = String.format("%-" + length + "s", value);
+					}
+					// 右对齐，左补空格
+					else if(align.equals(ISO8583Constants.ALIGN_LEFTSPACE)) {
+						value = String.format("%" + length + "s", value);
+					}
+					// 左对齐，右补0
+					else if(align.equals(ISO8583Constants.ALIGN_RIGHTZERO)) {
+						value = value + String.format("%0" + (length - intValueLen) + "d", 0);
+					}
+					// 右对齐，左补0
+					else if(align.equals(ISO8583Constants.ALIGN_LEFTZERO)) {
+						value = String.format("%0" + (length - intValueLen) + "d", 0) + value;
+					}
 				}
-				// 右对齐，左补空格
-				if(align.equals(ISO8583Constants.ALIGN_LEFTSPACE)) {
-					value = String.format("%" + length + "s", value);
+				else {
+				// 对于没有特殊设置补0规则的，按照模式进行补足位数
+				// 模式为BCD的左补0,模式为ASC的右补空格,模式为BIN的左补0
+					if(mode.equals(ISO8583Constants.MODE_BCD)) {
+						// 左补0
+						value = String.format("%0" + (length - intValueLen) + "d", 0) + value;
+					}
+					else if(mode.equals(ISO8583Constants.MODE_ASC)) {
+						// 右补空格
+						value = String.format("%-" + length + "s", value);
+					}
+					else if(mode.equals(ISO8583Constants.MODE_BIN)) {
+						// 左补0
+						value = String.format("%0" + (length - intValueLen) + "d", 0) + value;
+					}
 				}
-				// 左对齐，右补0
-				if(align.equals(ISO8583Constants.ALIGN_RIGHTZERO)) {
-					value = value + String.format("%0" + (length - intValueLen) + "d", 0);
-				}
-				// 右对齐，左补0
-				if(align.equals(ISO8583Constants.ALIGN_LEFTZERO)) {
-					value = String.format("%0" + (length - intValueLen) + "d", 0) + value;
-				}
+				
 			}
 			
 			// 变长字段长度处理

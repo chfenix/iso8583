@@ -309,29 +309,4 @@ public class CancelRequest extends AbstractRequestMsg {
 	public void setOriginalTraceNo(String originalTraceNo) {
 		this.originalTraceNo = originalTraceNo;
 	}
-
-	/**
-	 * 获取60域值
-	 * 60.1	交易类型码
-	 * 60.2	批次号
-	 * 60.3	网络管理码
-	 * 60.4	终端读取能力
-	 * @return
-	 */
-	public String getReserved60() {
-		return transType + batchNo + "000";
-	}
-	
-	/**
-	 * 获取61域值
-	 * 
-	 * 61.1	原批号
-	 * 61.2	原POS流水号
-	 * 
-	 * @return
-	 */
-	public String getReserved61() {
-		
-		return originalBatchNo + originalTraceNo;
-	}
 }
