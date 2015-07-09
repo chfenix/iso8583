@@ -21,6 +21,7 @@ public class TestBase {
 		
 		if(StringUtils.isBlank(terminalTraceNo)) {
 			terminalTraceNo = String.valueOf(new Date().getTime());
+			terminalTraceNo = terminalTraceNo.substring(0,terminalTraceNo.length()-3);
 		}
 		
 		String strTraceNo = terminalTraceNo.substring(terminalTraceNo.length() - 6);	// 后六位为交易流水号

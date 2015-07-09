@@ -15,6 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 public abstract class AbstractResponseMsg implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final String PREFIX_MSG = "iso8583.respmsg.";
 
 	/*
 	 * 交易编码
@@ -66,9 +68,9 @@ public abstract class AbstractResponseMsg implements Serializable {
 			if(StringUtils.isNotBlank(this.spec)) {
 				// 报文规范不为空，读取配置文件
 				Properties P = new Properties();
-				P.load(AbstractResponseMsg.class.getResourceAsStream("/config/" + spec +"/return_msg_" + spec + ".properties"));
-				if (P.containsKey(this.respCode)) {
-					return "[" + this.respCode + "]" + new String(P.getProperty(this.respCode).getBytes("UTF-8"),"UTF-8");
+				P.load(AbstractResponseMsg.class.getResourceAsStream("/config/" + spec +"/respmsg_" + spec + ".properties"));
+				if (P.containsKey(PREFIX_MSG + this.respCode)) {
+					return "[" + this.respCode + "]" + new String(P.getProperty(PREFIX_MSG + this.respCode).getBytes("UTF-8"),"UTF-8");
 				}
 			}
 		} catch (IOException e) {

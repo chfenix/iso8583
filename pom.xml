@@ -5,7 +5,7 @@
 	<groupId>cn.agiledata</groupId>
 	<artifactId>iso8583</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<name>agiledata-iso8583</name>
 	<url>http://maven.apache.org</url>
 

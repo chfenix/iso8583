@@ -25,7 +25,7 @@ public class TestCpus extends TestBase {
 			
 			// 使用秒数生成批次号及流水号
 			String[] arrTransNo = getBatchAndSeqNo(null);
-			
+			System.out.println("batchNo:" + arrTransNo[0] + " traceNo:" + arrTransNo[1]);
 			objSignReq.setBatchNo(arrTransNo[0]);	// 批次号
 			objSignReq.setTraceNo(arrTransNo[1]);	// 交易号
 			
