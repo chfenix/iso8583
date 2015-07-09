@@ -76,7 +76,7 @@ public class MessageFactory {
 			// 根据交易类型载入报文配置
 			JAXBContext jaxbContext = JAXBContext.newInstance(ISO8583ConfigGroup.class);  
             Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();  
-            configGroups = (ISO8583ConfigGroup) jaxbUnmarshaller.unmarshal(MessageFactory.class.getResourceAsStream("/pattern/iso8583_" + spec + ".xml"));
+            configGroups = (ISO8583ConfigGroup) jaxbUnmarshaller.unmarshal(MessageFactory.class.getResourceAsStream("/config/" + spec +"/iso8583_" + spec + ".xml"));
 		}
 		
 		ISO8583Config config = configGroups.getConfig(code);
@@ -85,6 +85,9 @@ public class MessageFactory {
 			log.error("spec:" + spec + " code:" + code + " action:" + action + " cann't found config!");
 			throw new ConfigNotFoundException("can not found the config in [" + spec + "." + code + "]");
 		}
+		
+		// 报文规范
+		objMessage.setSpec(spec);
 		
 		// 根据配置生成消息类
 		// 头信息配置

@@ -68,11 +68,6 @@ public class CancelResponse extends AbstractResponseMsg {
 	private String refNo;
 	
 	/*
-	 * 应答码
-	 */
-	private String respCode;
-	
-	/*
 	 * 终端号
 	 */
 	private String terminalNo;
@@ -198,14 +193,6 @@ public class CancelResponse extends AbstractResponseMsg {
 
 	public void setRefNo(String refNo) {
 		this.refNo = refNo;
-	}
-
-	public String getRespCode() {
-		return respCode;
-	}
-
-	public void setRespCode(String respCode) {
-		this.respCode = respCode;
 	}
 
 	public String getTerminalNo() {

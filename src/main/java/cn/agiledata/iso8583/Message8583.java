@@ -104,6 +104,11 @@ public class Message8583 {
 	 */
 	private String macSetting;
 	
+	/*
+	 * 报文规范
+	 */
+	private String spec;
+	
 	
 	/**
 	 * 赋值头数据至headData中
@@ -547,7 +552,8 @@ public class Message8583 {
 		}
 
 		PropertyUtils.copyProperties(responseMsg, mapReturn);
-
+		responseMsg.setSpec(this.spec);		// 报文规范
+		
 		return responseMsg;
 	}
 	
@@ -579,4 +585,13 @@ public class Message8583 {
 	public void setRespLen(int respLen) {
 		this.respLen = respLen;
 	}
+
+	public String getSpec() {
+		return spec;
+	}
+
+	public void setSpec(String spec) {
+		this.spec = spec;
+	}
+	
 }

@@ -47,6 +47,16 @@ public class SignRequest extends AbstractRequestMsg {
 	 */
 	private String operator;
 	
+	/*
+	 * 保留域 60
+	 */
+	private String reserved60;
+	
+	/*
+	 * 保留域 63
+	 */
+	private String reserved63;
+	
 	public SignRequest() {
 		code = MessageFactory.TRANS_CODE_SIGN;	// 交易编码
 	}
@@ -107,25 +117,19 @@ public class SignRequest extends AbstractRequestMsg {
 		this.operator = operator;
 	}
 
-	/**
-	 * 获取60域值
-	 * 60.1	交易类型码
-	 * 60.2	批次号
-	 * 60.3	网络管理信息码
-	 * 
-	 * @return
-	 */
 	public String getReserved60() {
-		return transType + batchNo + desType;
+		return reserved60;
 	}
-	
-	/**
-	 * 获取63域值
-	 * 63.1	操作员代码
-	 * 
-	 * @return
-	 */
+
+	public void setReserved60(String reserved60) {
+		this.reserved60 = reserved60;
+	}
+
 	public String getReserved63() {
-		return this.operator;
+		return reserved63;
+	}
+
+	public void setReserved63(String reserved63) {
+		this.reserved63 = reserved63;
 	}
 }
