@@ -72,6 +72,11 @@ public class ConsumRequest extends AbstractRequestMsg {
 	private String terminalNo;
 	
 	/*
+	 * 终端序列号
+	 */
+	private String terminalSn;
+	
+	/*
 	 * 商户号
 	 */
 	private String merNo;
@@ -112,6 +117,16 @@ public class ConsumRequest extends AbstractRequestMsg {
 	private String batchNo;
 	
 	private String reserved60;
+	
+	/*
+	 * 手机号
+	 */
+	private String mobile;
+	
+	/*
+	 * 二维码数据
+	 */
+	private String barCode;
 
 	public ConsumRequest() {
 		this.code = MessageFactory.TRANS_CODE_CONSUM;
@@ -221,6 +236,15 @@ public class ConsumRequest extends AbstractRequestMsg {
 	public void setTerminalNo(String terminalNo) {
 		this.terminalNo = terminalNo;
 	}
+	
+
+	public String getTerminalSn() {
+		return terminalSn;
+	}
+
+	public void setTerminalSn(String terminalSn) {
+		this.terminalSn = terminalSn;
+	}
 
 	public String getMerNo() {
 		return merNo;
@@ -293,4 +317,21 @@ public class ConsumRequest extends AbstractRequestMsg {
 	public String getReserved60() {
 		return reserved60;
 	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getBarCode() {
+		return barCode;
+	}
+
+	public void setBarCode(String barCode) {
+		this.barCode = barCode;
+	}
+	
 }

@@ -15,10 +15,10 @@
 		<field index="3" alias="processCode"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M" value="992051"/><!--交易处理码 -->
 		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方系统跟踪号 -->
 		<field index="22" alias="entryMode"  length="3" lengthType="FIX" mode="BCD" req="M" value="020"/><!-- 1位FLAG（类型）+2位版本号组成 FLAG（类型）为：充值签到为0-->
-		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" resp="M"/><!-- 应答码 -->
-		<field index="41" alias="terminalNo"  length="8" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
-		<field index="60" alias="reserved60"  length="11" lengthType="LLLBCD" mode="BCD" req="M" resp="M"/><!-- 自定义域 -->
-		<field index="63" alias="reserved63"  length="3" lengthType="LLLBCD" mode="ASC" req="M"/><!--操作员代码 -->
+		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" resp="M" value="00"/><!-- 应答码 -->
+		<field index="41" alias="terminalNo"  length="12" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
+		<field index="60" alias="reserved60"  length="78" lengthType="LLLBCD" mode="BCD" req="M" resp="M" combo="transTime+seqNo+'00000000000000'+'0000000000'+'0000000000'+'0000000000'+'0000000000'"/><!-- 自定义域 -->
+		<field index="63" alias="reserved63"  length="116" lengthType="LLLBCD" mode="ASC" req="M" combo="operator+'00000000000000000000000000'+'000000000'+'000000'+'0'+'00000000000000000000000000'+'0000000000000000'+'0000000000000000'+'0000'+'00000000'"/><!--操作员代码 -->
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
 	<mac>3|11|22|39|41|60|63|64</mac>

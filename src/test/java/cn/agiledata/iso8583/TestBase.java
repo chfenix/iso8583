@@ -2,6 +2,8 @@ package cn.agiledata.iso8583;
 
 import java.util.Date;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class TestBase {

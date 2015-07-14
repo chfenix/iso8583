@@ -30,6 +30,8 @@ public class MessageFactory {
 	 * 报文规范定义
 	 */
 	public static final String MSG_SPEC_CUPS = "cups";		// 银商资讯预付卡系统
+	public static final String MSG_SPEC_HBCC = "hbcitycard";		// 河北一卡通
+	public static final String MSG_SPEC_WOEPAY = "woepay";	// 沃支付沃支付
 	
 	/*
 	 * 动作定义

@@ -23,6 +23,11 @@ public class SignRequest extends AbstractRequestMsg {
 	private String terminalNo;
 	
 	/*
+	 * 终端序列号
+	 */
+	private String terminalSn;
+	
+	/*
 	 * 商户号
 	 */
 	private String merNo;
@@ -46,6 +51,16 @@ public class SignRequest extends AbstractRequestMsg {
 	 * 操作员
 	 */
 	private String operator;
+	
+	/*
+	 * 交易时间
+	 */
+	private String transTime;
+	
+	/*
+	 * 流水号
+	 */
+	private String seqNo;
 	
 	/*
 	 * 保留域 60
@@ -75,6 +90,14 @@ public class SignRequest extends AbstractRequestMsg {
 
 	public void setTerminalNo(String terminalNo) {
 		this.terminalNo = terminalNo;
+	}
+
+	public String getTerminalSn() {
+		return terminalSn;
+	}
+
+	public void setTerminalSn(String terminalSn) {
+		this.terminalSn = terminalSn;
 	}
 
 	public String getMerNo() {
@@ -115,6 +138,22 @@ public class SignRequest extends AbstractRequestMsg {
 
 	public void setOperator(String operator) {
 		this.operator = operator;
+	}
+
+	public String getTransTime() {
+		return transTime;
+	}
+
+	public void setTransTime(String transTime) {
+		this.transTime = transTime;
+	}
+
+	public String getSeqNo() {
+		return seqNo;
+	}
+
+	public void setSeqNo(String seqNo) {
+		this.seqNo = seqNo;
 	}
 
 	public String getReserved60() {
