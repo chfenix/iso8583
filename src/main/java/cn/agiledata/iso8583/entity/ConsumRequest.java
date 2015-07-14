@@ -289,24 +289,8 @@ public class ConsumRequest extends AbstractRequestMsg {
 	public void setReserved60(String reserved60) {
 		this.reserved60 = reserved60;
 	}
-	
-	/**
-	 * 获取60域值
-	 * 60.1	交易类型码
-	 * 60.2	批次号
-	 * 60.3	网络管理码
-	 * 60.4	终端读取能力
-	 * 60.5	基于PBOC借/贷记标准的IC卡条件代码
-	 * 60.6	支持部分扣款和返回余额的标志
-	 * 60.7	账户类型
-	 * @return
-	 */
-	/*public String getReserved60() {
-		if(StringUtils.isBlank(this.reserved60)) {
-			return transType + batchNo + "000";
-		}
-		else {
-			return reserved60;
-		}
-	}*/
+
+	public String getReserved60() {
+		return reserved60;
+	}
 }
