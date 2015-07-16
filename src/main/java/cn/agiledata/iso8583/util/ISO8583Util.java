@@ -194,7 +194,8 @@ public class ISO8583Util {
 	}
 	
 	/**
-	 * 将MAC字符串补足8的倍数
+	 * 将MAC字符串补足8字节的倍数
+	 * 十六进制的ASCII字符串使用两位表示一个字节
 	 * 
 	 * @param mac
 	 * @return
