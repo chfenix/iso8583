@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import cn.agiledata.iso8583.config.ISO8583Field;
+import cn.agiledata.iso8583.config.ISO8583Mac;
 import cn.agiledata.iso8583.entity.AbstractRequestMsg;
 import cn.agiledata.iso8583.entity.AbstractResponseMsg;
 import cn.agiledata.iso8583.exception.ConfigErrorException;
@@ -102,7 +103,7 @@ public class Message8583 {
 	/*
 	 * mac域配置
 	 */
-	private String macSetting;
+	private ISO8583Mac macSetting;
 	
 	/*
 	 * 报文规范
@@ -376,8 +377,8 @@ public class Message8583 {
 		
 		// 生成mac明文
 		// 解析mac明文域要求
-		if(StringUtils.isNotBlank(this.macSetting)) {
-			String[] arrIndex = macSetting.split("\\|");
+		if(this.macSetting != null && StringUtils.isNotBlank(this.macSetting.getKeySequence())) {
+			String[] arrIndex = this.macSetting.getKeySequence().split("\\|");
 			
 			int intPlainLen = 0;
 			List<byte[]> listPlain = new ArrayList<byte[]>();
@@ -401,17 +402,23 @@ public class Message8583 {
 					continue;
 				}
 				
-				// mac位置不为head/type/bitMap，其他均应该为域位置，解析位置获取具体域信息
-				int intIndex = Integer.parseInt(strKey);
-				ISO8583Field objField = bodyData.get(intIndex);
-				if(objField == null || objField.getByteValue() == null) {
-					// 域值为空
-					continue;
+				// mac位置为数字，识别为域位置，解析位置获取具体域信息
+				if(StringUtils.isNumeric(strKey)) {
+					int intIndex = Integer.parseInt(strKey);
+					ISO8583Field objField = bodyData.get(intIndex);
+					if(objField == null || objField.getByteValue() == null) {
+						// 域值为空
+						continue;
+					}
+					else {
+						intPlainLen += objField.getByteValueLen();
+						listPlain.add(objField.getByteValue());
+						continue;
+					}
 				}
 				else {
-					intPlainLen += objField.getByteValueLen();
-					listPlain.add(objField.getByteValue());
-					continue;
+					// MAC非数字，也非确定的key,识别为参数名称，从参数中获取具体信息
+					// FIXME 
 				}
 			}
 			
@@ -574,7 +581,7 @@ public class Message8583 {
 		return listData;
 	}
 
-	public void setMacSetting(String macSetting) {
+	public void setMacSetting(ISO8583Mac macSetting) {
 		this.macSetting = macSetting;
 	}
 

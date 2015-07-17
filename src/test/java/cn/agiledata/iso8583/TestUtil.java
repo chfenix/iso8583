@@ -31,7 +31,7 @@ public class TestUtil extends TestBase {
 		mak = DesUtil.doubleDesDecrypt(tmk, mak);
 		mak = "D221323982526330";
 		System.out.println("decmak: " + mak);
-		System.out.println("mac:"  +MACUtil.getX919Mac(mak, macData,MACUtil.MAC_FILL_0X80));
+		System.out.println("mac:"  +MACUtil.getX919Mac(mak, macData,MACUtil.FILL_0X80));
 		
 //		System.out.println(ISO8583Util.bytesToHexString("02E48E65".getBytes()));
 		

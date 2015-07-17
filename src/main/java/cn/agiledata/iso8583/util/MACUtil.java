@@ -15,8 +15,8 @@ public class MACUtil {
 	/*
 	 * MAC算法补位类型
 	 */
-	public static final int MAC_FILL_0X00 = 0;	// 补位0x00
-	public static final int MAC_FILL_0X80 = 8;	// 补位0x80
+	public static final int FILL_0X00 = 0;	// 补位0x00
+	public static final int FILL_0X80 = 8;	// 补位0x80
 	
 	/**
 	 * ANSI X9.9/X9.19 MAC计算
@@ -50,7 +50,7 @@ public class MACUtil {
 	 * 
 	 * @param mak  Mac Key 十六进制 8字节(X9.9)/16字节(X9.19)
 	 * @param macData   需要计算mac的明文域数据 十六进制
-	 * @param filleType Mac补位类型   POSUtil.MAC_FILL_0X00(补位0x00)  POSUtil.MAC_FILL_0X80(补位0x80)
+	 * @param filleType Mac补位类型   POSUtil.FILL_0X00(补位0x00)  POSUtil.FILL_0X80(补位0x80)
 	 * @return mac  十六进制
 	 * @throws MacException
 	 */
@@ -91,17 +91,17 @@ public class MACUtil {
 			}
 			
 			// 根据补位类型进行补位
-			if(filleType == MAC_FILL_0X00) {
+			if(filleType == FILL_0X00) {
 				// 补位0x00
 				macData = macData + "00";
 			}
-			else if(filleType == MAC_FILL_0X80) {
+			else if(filleType == FILL_0X80) {
 				// 补位0x80
 				macData = macData + "80";
 			}
 			else {
 				// 补位类型错误
-				throw new MacException("Fill type expected {" + MAC_FILL_0X00 + "," + MAC_FILL_0X80 + "} [" + filleType + "]");
+				throw new MacException("Fill type expected {" + FILL_0X00 + "," + FILL_0X80 + "} [" + filleType + "]");
 			}
 			
 			// 明文不足8字节倍数时补足位数

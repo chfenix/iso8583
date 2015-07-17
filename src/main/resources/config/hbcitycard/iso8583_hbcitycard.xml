@@ -21,6 +21,12 @@
 		<field index="63" alias="reserved63"  length="116" lengthType="LLLBCD" mode="ASC" req="M" combo="operator+'00000000000000000000000000'+'000000000'+'000000'+'0'+'00000000000000000000000000'+'0000000000000000'+'0000000000000000'+'0000'+'00000000'"/><!--操作员代码 -->
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
-	<mac>3|11|22|39|41|60|63|64</mac>
+	<mac>
+		<keySequence>3|11|22|39|41|60|63|64</keySequence>
+		<keys>
+			<field alias="operator"  length="6" lengthType="FIX" mode="BCD"/>
+			<field alias="time"  length="6" lengthType="FIX" mode="BCD" />
+		</keys>
+	</mac>
 </trans>
 </config>

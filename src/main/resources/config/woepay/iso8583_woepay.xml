@@ -54,7 +54,9 @@
 		<field index="63" alias="reserved63"  length="163" lengthType="LLLBCD" mode="ASC" resp="M"/><!--存放站点\优惠金额等信息 -->
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
-	<mac>type|bitMap|2|3|4|5|11|12|13|22|26|38|39|40|41|42|44|52|53|54|58|60|61|63</mac>
+	<mac>
+		<keySequence>type|bitMap|2|3|4|5|11|12|13|22|26|38|39|40|41|42|44|52|53|54|58|60|61|63</keySequence>
+	</mac>
 </trans>
 
 <!-- 消费冲正 -->
@@ -88,7 +90,9 @@
 		<field index="63" alias="reserved63"  length="163" lengthType="LLLBCD" mode="ASC" resp="M"/><!--存放站点\优惠金额等信息 -->
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
-	<mac>type|bitMap|2|3|4|5|11|12|13|22|26|38|39|40|41|42|44|52|53|54|58|60|61|63</mac>
+	<mac>
+		<keySequence>type|bitMap|2|3|4|5|11|12|13|22|26|38|39|40|41|42|44|52|53|54|58|60|61|63</keySequence>
+	</mac>
 </trans>
 
 <!-- 消费撤销配置 -->
@@ -117,7 +121,9 @@
 		<field index="63" alias="reserved63"  length="163" lengthType="LLLBCD" mode="ASC" resp="M"/><!--存放站点\优惠金额等信息 -->
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
-	<mac>type|bitMap|2|3|4|5|11|12|13|38|39|40|41|42|44|49|60|61|63</mac>
+	<mac>
+		<keySequence>type|bitMap|2|3|4|5|11|12|13|38|39|40|41|42|44|49|60|61|63</keySequence>
+	</mac>
 </trans>
 
 <!-- 退货配置 -->
@@ -155,6 +161,8 @@
 		<field index="62" alias="reserved62"  length="999" lengthType="LLLBCD" mode="BCD" req="M" resp="M"/><!-- 自定义域 -->
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
-	<mac>type|bitMap|2|3|4|5|11|12|13|14|15|22|23|25|26|32|38|39|40|41|42|44|49|52|53|60|61|62|63</mac>
+	<mac>
+		<keySequence>type|bitMap|2|3|4|5|11|12|13|14|15|22|23|25|26|32|38|39|40|41|42|44|49|52|53|60|61|62|63</keySequence>
+	</mac>
 </trans>
 </config>

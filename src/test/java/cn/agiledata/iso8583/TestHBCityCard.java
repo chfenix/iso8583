@@ -9,6 +9,8 @@ import org.junit.Test;
 import cn.agiledata.iso8583.entity.SignRequest;
 import cn.agiledata.iso8583.entity.SignResponse;
 import cn.agiledata.iso8583.util.ISO8583Socket;
+import cn.agiledata.iso8583.util.ISO8583Util;
+import cn.agiledata.iso8583.util.MACUtil;
 
 /**
  * 河北一卡通测试
@@ -24,6 +26,8 @@ public class TestHBCityCard extends TestBase {
 	// 签到
 	public void signIn() throws Exception{
 		try {
+			
+			
 			SignRequest objSignReq = new SignRequest();
 			
 			String terminalTraceNo = String.valueOf(new Date().getTime());
@@ -44,10 +48,17 @@ public class TestHBCityCard extends TestBase {
 			Message8583 message = MessageFactory.createMessage(MessageFactory.MSG_SPEC_HBCC, objSignReq.getCode(),null);
 			message.fillBodyData(objSignReq);
 			message.pack();
+			
+			byte[] mac = message.getMacPlain();
+			
+			String strMac = MACUtil.getX919Mac("D221323982526330", ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
+			message.setMac(strMac);
+			
 			byte[] request = message.getMessage();
 			
+			
 			ISO8583Socket socket = new ISO8583Socket();
-			socket.connect("110.249.212.155", 12306,5000);
+			/*socket.connect("110.249.212.155", 12306,5000);
 			
 			socket.sendRequest(request);
 			
@@ -59,7 +70,7 @@ public class TestHBCityCard extends TestBase {
 			
 			objSignResp = new SignResponse();
 			msgResponse.getResponseData(objSignResp);
-			objSignResp.process();
+			objSignResp.process();*/
 			
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -75,14 +75,14 @@ public class ISO8583Config implements Serializable {
 	/*
 	 * Mac计算位置
 	 */
-	private String mac;
+	private ISO8583Mac mac;
 
 	@XmlElement(name = "mac")
-	public String getMac() {
+	public ISO8583Mac getMac() {
 		return mac;
 	}
 
-	public void setMac(String mac) {
+	public void setMac(ISO8583Mac mac) {
 		this.mac = mac;
 	}
 	
