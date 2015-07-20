@@ -7,8 +7,8 @@
 <!-- 签到配置 -->
 <trans code="sign">
 	<head>
-		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
-		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000630000"/>
+		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="601000000000"/>
 	</head>
 	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0900"/> 
 	<body>
@@ -16,16 +16,22 @@
 		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方系统跟踪号 -->
 		<field index="22" alias="entryMode"  length="3" lengthType="FIX" mode="BCD" req="M" value="020"/><!-- 1位FLAG（类型）+2位版本号组成 FLAG（类型）为：充值签到为0-->
 		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" resp="M" value="00"/><!-- 应答码 -->
-		<field index="41" alias="terminalNo"  length="12" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
+		<field index="41" alias="terminalCode"  length="12" lengthType="FIX" mode="ASC" req="M" resp="M" combo="'000'+terminalNo"/><!-- 终端号 -->
 		<field index="60" alias="reserved60"  length="78" lengthType="LLLBCD" mode="BCD" req="M" resp="M" combo="transTime+seqNo+'00000000000000'+'0000000000'+'0000000000'+'0000000000'+'0000000000'"/><!-- 自定义域 -->
-		<field index="63" alias="reserved63"  length="116" lengthType="LLLBCD" mode="ASC" req="M" combo="operator+'00000000000000000000000000'+'000000000'+'000000'+'0'+'00000000000000000000000000'+'0000000000000000'+'0000000000000000'+'0000'+'00000000'"/><!--操作员代码 -->
+		<field index="63" alias="reserved63"  length="116" lengthType="LLLBCD" mode="ASC" req="M" combo="operator+'000000000000000000000000'+'000000000'+'000000'+'0'+'00000000000000000000000000'+'0000000000000000'+terminalSn+'0000'+'00000000'"/><!--操作员代码 -->
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
 	<mac>
-		<keySequence>3|11|22|39|41|60|63|64</keySequence>
+		<keySequence>transTime|seqNo|terminalSn|terminalNo|operator|totalAccNum|totalAccAmt|suffix</keySequence>
 		<keys>
-			<field alias="operator"  length="6" lengthType="FIX" mode="BCD"/>
-			<field alias="time"  length="6" lengthType="FIX" mode="BCD" />
+			<field alias="transTime"  length="14" lengthType="FIX" mode="BCD"/>
+			<field alias="seqNo"  length="10" lengthType="FIX" mode="BCD" />
+			<field alias="terminalSn"  length="16" lengthType="FIX" mode="BCD" />
+			<field alias="terminalNo"  length="9" lengthType="FIX" mode="BCD" />
+			<field alias="operator"  length="6" lengthType="FIX" mode="BCD" />
+			<field alias="totalAccNum"  length="10" lengthType="FIX" mode="BCD" value="0"/>
+			<field alias="totalAccAmt"  length="10" lengthType="FIX" mode="BCD" value="0" />
+			<field alias="suffix"  length="5" lengthType="FIX" mode="BCD" value="0"  align="RIGHTZERO"/>
 		</keys>
 	</mac>
 </trans>

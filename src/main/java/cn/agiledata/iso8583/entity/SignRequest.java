@@ -72,6 +72,8 @@ public class SignRequest extends AbstractRequestMsg {
 	 */
 	private String reserved63;
 	
+	private String mac;
+	
 	public SignRequest() {
 		code = MessageFactory.TRANS_CODE_SIGN;	// 交易编码
 	}
@@ -170,5 +172,13 @@ public class SignRequest extends AbstractRequestMsg {
 
 	public void setReserved63(String reserved63) {
 		this.reserved63 = reserved63;
+	}
+
+	public String getMac() {
+		return mac;
+	}
+
+	public void setMac(String mac) {
+		this.mac = mac;
 	}
 }

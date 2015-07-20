@@ -101,9 +101,14 @@ public class Message8583 {
 	private byte[] macPlain;
 	
 	/*
-	 * mac域配置
+	 * Mac域配置
 	 */
 	private ISO8583Mac macSetting;
+	
+	/*
+	 * Mac自定义key数据域
+	 */
+	private Map<String, ISO8583Field> macData;
 	
 	/*
 	 * 报文规范
@@ -330,7 +335,19 @@ public class Message8583 {
 			bodyData.put(index, objField);
 		}
 		
-		
+		if(macData != null) {
+			// 遍历Mac特殊域配置，从赋值属性中取值
+			for (Map.Entry<String, ISO8583Field> entry : macData.entrySet()) {
+				if(mapRequset.get(entry.getKey()) == null) {
+					// 赋值属性中没有mac所需内容
+					continue;
+				}
+				
+				// 将赋值属性值保存与Mac特殊域中
+				ISO8583Field objField = entry.getValue();
+				objField.setValue(mapRequset.get(entry.getKey()).toString());
+			}
+		}
 	}
 	
 	/**
@@ -403,23 +420,29 @@ public class Message8583 {
 				}
 				
 				// mac位置为数字，识别为域位置，解析位置获取具体域信息
+				ISO8583Field objField = null;
 				if(StringUtils.isNumeric(strKey)) {
 					int intIndex = Integer.parseInt(strKey);
-					ISO8583Field objField = bodyData.get(intIndex);
-					if(objField == null || objField.getByteValue() == null) {
-						// 域值为空
-						continue;
-					}
-					else {
-						intPlainLen += objField.getByteValueLen();
-						listPlain.add(objField.getByteValue());
-						continue;
-					}
+					objField = bodyData.get(intIndex);
+					
 				}
 				else {
 					// MAC非数字，也非确定的key,识别为参数名称，从参数中获取具体信息
-					// FIXME 
+					objField = macData.get(strKey);
+					if(objField != null) {
+						objField.build();
+					}
 				}
+					
+				if(objField == null || objField.getByteValue() == null) {
+					// 域值为空
+					log.error("mac plain setting [" + strKey + "] cannot found in message!");
+					continue;
+				}
+				
+				intPlainLen += objField.getByteValueLen();
+				listPlain.add(objField.getByteValue());
+				continue;
 			}
 			
 			this.macPlain = new byte[intPlainLen];
@@ -583,6 +606,16 @@ public class Message8583 {
 
 	public void setMacSetting(ISO8583Mac macSetting) {
 		this.macSetting = macSetting;
+		
+		if(macSetting != null && macSetting.getKeys() != null && macSetting.getKeys().size() > 0) {
+			// 有特殊Mac域设置，保存设定值
+			macData = new HashMap<String, ISO8583Field>();
+			
+			// 以别名作为key保存在map中
+			for (ISO8583Field objField : macSetting.getKeys()) {
+				macData.put(objField.getAlias(), objField);
+			}
+		}
 	}
 
 	public int getRespLen() {

@@ -32,11 +32,14 @@ public class TestHBCityCard extends TestBase {
 			
 			String terminalTraceNo = String.valueOf(new Date().getTime());
 			terminalTraceNo = terminalTraceNo.substring(0,terminalTraceNo.length()-3);
-			objSignReq.setTerminalNo("000" + "00103951");
+			// FIXME 读取终端号为8位
+			objSignReq.setTerminalNo("001003951");
 			objSignReq.setTraceNo("0");
 			objSignReq.setSeqNo(terminalTraceNo);
 			objSignReq.setTransTime(DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));	// 交易时间
 			objSignReq.setOperator("000001");
+			objSignReq.setTerminalSn("0100000000003951");	// PASMid
+			objSignReq.setMac("0");
 			
 			
 //			objSignReq.setReserved63("000001"+"00000000000000000000000000" + "000000000" + "000000" + "0" + "00000000000000000000000000"
@@ -50,27 +53,30 @@ public class TestHBCityCard extends TestBase {
 			message.pack();
 			
 			byte[] mac = message.getMacPlain();
+			log.info(ISO8583Util.bytesToHexString(mac));
+			
 			
 			String strMac = MACUtil.getX919Mac("D221323982526330", ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
 			message.setMac(strMac);
 			
 			byte[] request = message.getMessage();
+			log.info(ISO8583Util.printBytes(request));
 			
 			
 			ISO8583Socket socket = new ISO8583Socket();
-			/*socket.connect("110.249.212.155", 12306,5000);
+			socket.connect("110.249.212.155", 12306,50000);
 			
 			socket.sendRequest(request);
 			
 			// 获取返回结果
 			byte[] response = socket.get8583Response(message.getRespLen());
-			Message8583 msgResponse = MessageFactory.createMessage(MessageFactory.MSG_SPEC_CUPS, objSignReq.getCode(),null);
+			Message8583 msgResponse = MessageFactory.createMessage(MessageFactory.MSG_SPEC_HBCC, objSignReq.getCode(),null);
 			msgResponse.setResponse(response);
 			msgResponse.unpack();
 			
 			objSignResp = new SignResponse();
 			msgResponse.getResponseData(objSignResp);
-			objSignResp.process();*/
+			objSignResp.process();
 			
 		} catch (Exception e) {
 			e.printStackTrace();

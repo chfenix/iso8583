@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import cn.agiledata.iso8583.ISO8583Constants;
+import cn.agiledata.iso8583.exception.ConfigErrorException;
 import cn.agiledata.iso8583.exception.EmptyValueException;
 import cn.agiledata.iso8583.util.BCDUtil;
 import cn.agiledata.iso8583.util.ISO8583Util;
@@ -312,6 +313,10 @@ public class ISO8583Field implements Serializable {
 			}
 			else if(mode.equals(ISO8583Constants.MODE_BIN)) {
 				filed = ISO8583Util.binaryStrToBytes(value);
+			}
+			else {
+				log.error("illegal mode [" + mode + "]!");
+				throw new ConfigErrorException("illegal mode [" + mode + "]!");
 			}
 			
 			// 数据处理
