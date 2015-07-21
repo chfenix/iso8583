@@ -1,8 +1,11 @@
 package cn.agiledata.iso8583;
 
+import java.io.ByteArrayOutputStream;
+
 import org.junit.Test;
 
 import cn.agiledata.iso8583.util.DesUtil;
+import cn.agiledata.iso8583.util.ISO8583Util;
 import cn.agiledata.iso8583.util.MACUtil;
 import cn.agiledata.iso8583.util.PINUtil;
 
@@ -36,4 +39,41 @@ public class TestUtil extends TestBase {
 //		System.out.println(ISO8583Util.bytesToHexString("02E48E65".getBytes()));
 		
 	}
+	
+	@Test
+	public void testHBCityCardKeyResp() throws Exception {
+		String strTMK = "37333045313939353633433446363337";
+		String strPIK = "31443142464434304130313530373839";
+		String strMAK = "4137343437453543463030433934303930423037374330393537434631334433";
+		
+		strTMK = new String(ISO8583Util.hexStringToByte(strTMK));
+		strPIK = new String(ISO8583Util.hexStringToByte(strPIK));
+		strMAK = new String(ISO8583Util.hexStringToByte(strMAK));
+		
+		// 解密TMK
+		strTMK = DesUtil.desDecrypt("0864297531133457", strTMK);
+		System.out.println("tmk:" + strTMK);
+		
+		// 解密pik
+		strPIK = DesUtil.desDecrypt(strTMK, strPIK);
+		System.out.println("pik:"  +strPIK);
+		
+		// 解密mak
+		String strMakLeft = strMAK.substring(0,16);
+		String strMakRight = strMAK.substring(16);
+		// 解密
+		strMakLeft = DesUtil.desDecrypt(strTMK, strMakLeft);
+		strMakRight = DesUtil.desDecrypt(strTMK, strMakRight);
+		// 异或
+		byte[] byteMakLeft = ISO8583Util.hexStringToByte(strMakLeft);
+		byte[] byteMakRight = ISO8583Util.hexStringToByte(strMakRight);
+		
+		byte[] xorResult=new byte[8];
+		for (int j = 0; j < 8; j++) {
+			xorResult[j] = (byte) (byteMakLeft[j] ^ byteMakRight[j]);
+		}
+		System.out.println("mak:" + ISO8583Util.bytesToHexString(xorResult));
+	}
+	
+	
 }

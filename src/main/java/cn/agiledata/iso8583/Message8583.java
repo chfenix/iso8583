@@ -300,27 +300,7 @@ public class Message8583 {
 		for (ISO8583Field objField : bodyData.values()) {
 			if(StringUtils.isNotBlank(objField.getCombo())) {
 				// 有组合域值，进行拼装
-				// 解析设置
-				StringBuffer sbValue = new StringBuffer();
-				String[] arrCombo = objField.getCombo().split("\\+");
-				for (int i = 0; i < arrCombo.length; i++) {
-					String strKey = arrCombo[i].trim();
-					if(strKey.startsWith("'") || strKey.endsWith("'")) {
-						// 判断是否有完整的单引号
-						if(!strKey.startsWith("'") || !strKey.endsWith("'")) {
-							throw new ConfigErrorException("combo config error![" + objField.getCombo() + "] index:" + objField.getIndex());
-						}
-						// 删除单引号,拼装值
-						sbValue.append(strKey.substring(1, strKey.length() - 1));
-					}
-					else {
-						// 非单引号，从传入数据中获取内容
-						if(mapRequset.get(strKey) != null) {
-							sbValue.append(mapRequset.get(strKey));
-						}
-					}
-				}
-				objField.setValue(sbValue.toString());
+				objField.setValue(fillComboValue(mapRequset, objField));
 			}
 		}
 		
@@ -337,19 +317,18 @@ public class Message8583 {
 		
 		if(macData != null) {
 			// 遍历Mac特殊域配置，从赋值属性中取值
-			for (Map.Entry<String, ISO8583Field> entry : macData.entrySet()) {
-				if(mapRequset.get(entry.getKey()) == null) {
-					// 赋值属性中没有mac所需内容
-					continue;
+			for (ISO8583Field objField : macData.values()) {
+				if(StringUtils.isNotBlank(objField.getCombo())) {
+					// 有组合域值，进行拼装
+					objField.setValue(fillComboValue(mapRequset, objField));
 				}
-				
-				// 将赋值属性值保存与Mac特殊域中
-				ISO8583Field objField = entry.getValue();
-				objField.setValue(mapRequset.get(entry.getKey()).toString());
+				else {
+					objField.setValue(mapRequset.get(objField.getAlias()).toString());
+				}
 			}
 		}
 	}
-	
+
 	/**
 	 * 生成报文数据字节数组数据 (包含消息头、交易类型、位图、消息体)
 	 * 生成的报文通过getMessage获取
@@ -602,6 +581,38 @@ public class Message8583 {
 		}
 		
 		return listData;
+	}
+	
+	/**
+	 * 处理配置中的组合值
+	 * 
+	 * @param mapRequset
+	 * @param objField
+	 * @return
+	 * @throws ConfigErrorException
+	 */
+	private String fillComboValue(Map<String, Object> mapRequset,ISO8583Field objField) 
+			throws ConfigErrorException {
+		StringBuffer sbValue = new StringBuffer();
+		String[] arrCombo = objField.getCombo().split("\\+");
+		for (int i = 0; i < arrCombo.length; i++) {
+			String strKey = arrCombo[i].trim();
+			if(strKey.startsWith("'") || strKey.endsWith("'")) {
+				// 判断是否有完整的单引号
+				if(!strKey.startsWith("'") || !strKey.endsWith("'")) {
+					throw new ConfigErrorException("combo config error![" + objField.getCombo() + "] index:" + objField.getIndex());
+				}
+				// 删除单引号,拼装值
+				sbValue.append(strKey.substring(1, strKey.length() - 1));
+			}
+			else {
+				// 非单引号，从传入数据中获取内容
+				if(mapRequset.get(strKey) != null) {
+					sbValue.append(mapRequset.get(strKey));
+				}
+			}
+		}
+		return sbValue.toString();
 	}
 
 	public void setMacSetting(ISO8583Mac macSetting) {

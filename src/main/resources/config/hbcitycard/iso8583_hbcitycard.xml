@@ -22,16 +22,34 @@
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
 	<mac>
-		<keySequence>transTime|seqNo|terminalSn|terminalNo|operator|totalAccNum|totalAccAmt|suffix</keySequence>
+		<keySequence>macField</keySequence>
 		<keys>
-			<field alias="transTime"  length="14" lengthType="FIX" mode="BCD"/>
-			<field alias="seqNo"  length="10" lengthType="FIX" mode="BCD" />
-			<field alias="terminalSn"  length="16" lengthType="FIX" mode="BCD" />
-			<field alias="terminalNo"  length="9" lengthType="FIX" mode="BCD" />
-			<field alias="operator"  length="6" lengthType="FIX" mode="BCD" />
-			<field alias="totalAccNum"  length="10" lengthType="FIX" mode="BCD" value="0"/>
-			<field alias="totalAccAmt"  length="10" lengthType="FIX" mode="BCD" value="0" />
-			<field alias="suffix"  length="5" lengthType="FIX" mode="BCD" value="0"  align="RIGHTZERO"/>
+			<field alias="macField"  length="80" lengthType="FIX" mode="BCD" combo="transTime+seqNo+terminalSn+terminalNo+operator+'0000000000'+'0000000000'+'00000'"/>
+		</keys>
+	</mac>
+</trans>
+
+<!-- Pin Key /Mac Key请求配置 -->
+<trans code="getKey">
+	<head>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000630000"/>
+		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="601000000000"/>
+	</head>
+	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0900"/> 
+	<body>
+		<field index="3" alias="processCode"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M" value="992001"/><!--交易处理码 -->
+		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方系统跟踪号 -->
+		<field index="22" alias="entryMode"  length="3" lengthType="FIX" mode="BCD" req="M" value="020"/><!-- 1位FLAG（类型）+2位版本号组成 FLAG（类型）为：0-->
+		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" resp="M" value="00"/><!-- 应答码 -->
+		<field index="41" alias="terminalCode"  length="12" lengthType="FIX" mode="ASC" req="M" resp="M" combo="'000'+terminalNo"/><!-- 终端号 -->
+		<field index="60" alias="reserved60"  length="78" lengthType="LLLBCD" mode="BCD" req="M" resp="M" combo="transTime+seqNo+'00000000000000'"/><!-- 自定义域 -->
+		<field index="63" alias="reserved63"  length="116" lengthType="LLLBCD" mode="ASC" req="M" combo="operator+'0000000000000000'+'0000000000000000'+'00000000000000000000000000000000'+terminalSn+'000'+terminalNo+'0000'"/><!--操作员代码 -->
+		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
+	</body>
+	<mac>
+		<keySequence>macField</keySequence>
+		<keys>
+			<field alias="macField"  length="54" lengthType="FIX" mode="BCD" combo="seqNo+terminalSn+terminalNo+'000'+terminalNo+operator+'0'"/>
 		</keys>
 	</mac>
 </trans>

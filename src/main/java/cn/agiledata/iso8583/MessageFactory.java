@@ -48,6 +48,8 @@ public class MessageFactory {
 	public static final String TRANS_CODE_CANCEL = "cancel";	// 消费撤销
 	public static final String TRANS_CODE_REFUND = "refund";	//  退款
 	
+	public static final String TRANS_CODE_GETKEY = "getKey";	// Pin Key /Mac Key请求交易（河北一卡通特有交易）
+	
 	/**
 	 * 创建8583消息类
 	 * 
