@@ -43,6 +43,7 @@ public class MessageFactory {
 	 * 交易类型
 	 */
 	public static final String TRANS_CODE_SIGN = "sign";		// 签到
+	public static final String TRANS_CODE_SIGNOUT = "signOut";		// 签退
 	public static final String TRANS_CODE_CONSUM = "consum";	// 消费
 	public static final String TRANS_CODE_REVERSE_CONSUM = "reverseConsum";	// 消费冲正
 	public static final String TRANS_CODE_CANCEL = "cancel";	// 消费撤销
@@ -92,6 +93,9 @@ public class MessageFactory {
 		
 		// 报文规范
 		objMessage.setSpec(spec);
+		
+		// 交易类型
+		objMessage.setCode(code);
 		
 		// 根据配置生成消息类
 		// 头信息配置

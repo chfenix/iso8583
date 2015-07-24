@@ -115,6 +115,11 @@ public class Message8583 {
 	 */
 	private String spec;
 	
+	/*
+	 * 交易类型
+	 */
+	private String code;
+	
 	
 	/**
 	 * 赋值头数据至headData中
@@ -279,7 +284,7 @@ public class Message8583 {
 			pos += length;
 		}
 		
-		log.info("body:\n"  + ISO8583Util.printBytes(this.body));
+		log.debug("body:\n"  + ISO8583Util.printBytes(this.body));
 	}
 	
 
@@ -334,6 +339,7 @@ public class Message8583 {
 	 * 生成的报文通过getMessage获取
 	 */
 	public void pack() {
+		log.info("########################### pack [" + spec + "." + code  + "] request message begin #####################");
 		// 构造byte数组数据
 		buildHead();	// 消息头
 		buildType();	// 交易类型
@@ -433,6 +439,7 @@ public class Message8583 {
 				macOffset += objByteField.length;
 			}
 		}
+		log.info("########################### pack [" + spec + "." + code  + "] request message end #####################");
 		
 	}
 	
@@ -465,6 +472,7 @@ public class Message8583 {
 	 * @param mac
 	 */
 	public void setMac(String mac) {
+		log.info("MAC:" + mac);
 		byte[] byteMac = ISO8583Util.hexStringToByte(mac);
 		System.arraycopy(byteMac, 0, this.message, this.message.length - byteMac.length, byteMac.length);
 	}
@@ -484,7 +492,7 @@ public class Message8583 {
 	 * @return
 	 */
 	public void unpack() throws Exception {
-		
+		log.info("########################### unpack [" + spec + "." + code  + "] response message begin #####################");
 		// 截取报文头
 		int offset = 0;
 		for (ISO8583Field objHead : headData.values()) {
@@ -536,7 +544,7 @@ public class Message8583 {
 			objField.parse();
 			offset += objField.getByteValueLen();
 		}
-			
+		log.info("########################### unpack [" + spec + "." + code  + "] response message end #####################");
 	}
 	
 	/**
@@ -644,5 +652,12 @@ public class Message8583 {
 	public void setSpec(String spec) {
 		this.spec = spec;
 	}
-	
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
 }

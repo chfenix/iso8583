@@ -55,6 +55,7 @@ public class TestUtil extends TestBase {
 		System.out.println("tmk:" + strTMK);
 		
 		// 解密pik
+		System.out.println("enpik:" + strPIK);
 		strPIK = DesUtil.desDecrypt(strTMK, strPIK);
 		System.out.println("pik:"  +strPIK);
 		
@@ -73,7 +74,7 @@ public class TestUtil extends TestBase {
 			xorResult[j] = (byte) (byteMakLeft[j] ^ byteMakRight[j]);
 		}
 		System.out.println("mak:" + ISO8583Util.bytesToHexString(xorResult));
+		System.out.println("enmak:" + DesUtil.desEncrypt(strTMK, ISO8583Util.bytesToHexString(xorResult)));
 	}
-	
 	
 }

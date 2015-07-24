@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.net.Socket;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -94,6 +95,8 @@ public class ISO8583Socket {
 	 */
 	public void sendRequest(byte[] content) throws Exception {
 		try {
+			long starTime = new Date().getTime();
+			log.info("start send message!.....");
 			if(content == null || content.length == 0) {
 				close();
 				return;
@@ -101,6 +104,7 @@ public class ISO8583Socket {
 			
 			outputStream.write(content);
 			outputStream.flush();
+			log.info("send message end! (" + (new Date().getTime() - starTime) + "ms)");
 		} catch (Exception e) {
 			e.printStackTrace();
 			close();
