@@ -28,6 +28,11 @@ public class TestHBCityCard extends TestBase {
 	
 	private static final Logger log = Logger.getLogger(TestHBCityCard.class);
 	
+	// 以下三个密钥都为明文使用
+	private static final String TMK = "1A3D2ACE8C519702";
+	private static final String PIK = "1D1BFD40A0150789";
+	private static final String MAK = "B73622783C5A48D4";
+	
 	@Test
 	/**
 	 * 整合签到测试
@@ -72,7 +77,7 @@ public class TestHBCityCard extends TestBase {
 			log.info(ISO8583Util.bytesToHexString(mac));
 			
 			
-			String strMac = MACUtil.getX919Mac("B73622783C5A48D4", ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
+			String strMac = MACUtil.getX919Mac(MAK, ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
 			message.setMac(strMac);
 			
 			byte[] request = message.getMessage();
@@ -126,7 +131,7 @@ public class TestHBCityCard extends TestBase {
 			log.info(ISO8583Util.bytesToHexString(mac));
 			
 			
-			String strMac = MACUtil.getX919Mac("B73622783C5A48D4", ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
+			String strMac = MACUtil.getX919Mac(MAK, ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
 			message.setMac(strMac);
 			
 			byte[] request = message.getMessage();
@@ -160,8 +165,6 @@ public class TestHBCityCard extends TestBase {
 	 */
 	public void signOut() throws Exception {
 		try {
-			String strMAK = "B73622783C5A48D4";
-			
 			SignOutRequest objSignOutReq = new SignOutRequest();
 			
 			String terminalTraceNo = String.valueOf(new Date().getTime());
@@ -184,7 +187,7 @@ public class TestHBCityCard extends TestBase {
 			log.info(ISO8583Util.bytesToHexString(mac));
 			
 			
-			String strMac = MACUtil.getX919Mac(strMAK, ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
+			String strMac = MACUtil.getX919Mac(MAK, ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
 			message.setMac(strMac);
 			
 			byte[] request = message.getMessage();

@@ -7,7 +7,7 @@ package cn.agiledata.iso8583.entity;
  * @author zln
  *
  */
-public class ReverseConsumResponse extends AbstractResponseMsg {
+public class ConsumeResponse extends AbstractResponseMsg {
 
 	private static final long serialVersionUID = -9085181254454823804L;
 	

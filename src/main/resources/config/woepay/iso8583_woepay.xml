@@ -24,7 +24,7 @@
 </trans>
 
 <!-- 消费配置 -->
-<trans code="consum">
+<trans code="consume">
 	<head>
 		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
 	</head>
@@ -60,7 +60,7 @@
 </trans>
 
 <!-- 消费冲正 -->
-<trans code="reverseConsum">
+<trans code="reverseConsume">
 	<head>
 		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
 	</head>

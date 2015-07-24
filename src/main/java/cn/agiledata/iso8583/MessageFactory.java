@@ -44,8 +44,8 @@ public class MessageFactory {
 	 */
 	public static final String TRANS_CODE_SIGN = "sign";		// 签到
 	public static final String TRANS_CODE_SIGNOUT = "signOut";		// 签退
-	public static final String TRANS_CODE_CONSUM = "consum";	// 消费
-	public static final String TRANS_CODE_REVERSE_CONSUM = "reverseConsum";	// 消费冲正
+	public static final String TRANS_CODE_CONSUME = "consume";	// 消费
+	public static final String TRANS_CODE_REVERSE_CONSUME = "reverseConsume";	// 消费冲正
 	public static final String TRANS_CODE_CANCEL = "cancel";	// 消费撤销
 	public static final String TRANS_CODE_REFUND = "refund";	//  退款
 	

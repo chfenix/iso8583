@@ -12,7 +12,7 @@ import cn.agiledata.iso8583.MessageFactory;
  * @author zln
  *
  */
-public class ReverseConsumRequest extends AbstractRequestMsg {
+public class ReverseConsumeRequest extends AbstractRequestMsg {
 
 	private static final long serialVersionUID = -6500452916955431281L;
 	
@@ -94,8 +94,8 @@ public class ReverseConsumRequest extends AbstractRequestMsg {
 	
 	private String reserved60;
 
-	public ReverseConsumRequest() {
-		this.code = MessageFactory.TRANS_CODE_REVERSE_CONSUM;
+	public ReverseConsumeRequest() {
+		this.code = MessageFactory.TRANS_CODE_REVERSE_CONSUME;
 	}
 
 	public String getPrimaryAcctNo() {

@@ -12,7 +12,7 @@ import cn.agiledata.iso8583.MessageFactory;
  * @author zln
  *
  */
-public class ConsumRequest extends AbstractRequestMsg {
+public class ConsumeRequest extends AbstractRequestMsg {
 
 	private static final long serialVersionUID = 2069184814100605630L;
 
@@ -128,8 +128,8 @@ public class ConsumRequest extends AbstractRequestMsg {
 	 */
 	private String barCode;
 
-	public ConsumRequest() {
-		this.code = MessageFactory.TRANS_CODE_CONSUM;
+	public ConsumeRequest() {
+		this.code = MessageFactory.TRANS_CODE_CONSUME;
 	}
 
 	public String getPrimaryAcctNo() {
