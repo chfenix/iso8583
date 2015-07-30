@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.apache.commons.lang3.StringUtils;
 
 import cn.agiledata.iso8583.MessageFactory;
+import cn.agiledata.iso8583.util.ISO8583Util;
 
 /**
  * 消费请求报文
@@ -127,7 +128,27 @@ public class ConsumeRequest extends AbstractRequestMsg {
 	 * 二维码数据
 	 */
 	private String barCode;
-
+	
+	/*
+	 * 账户类型
+	 */
+	private String accountType;
+	
+	/*
+	 * PBOC电子钱包标准的交易信息
+	 */
+	private String pbocElecData;
+	
+	/*
+	 * CPU卡防伪随机数
+	 */
+	private String randomCode;
+	
+	/*
+	 * CPU卡防伪校验码
+	 */
+	private String verifyCode;
+	
 	public ConsumeRequest() {
 		this.code = MessageFactory.TRANS_CODE_CONSUME;
 	}
@@ -274,8 +295,12 @@ public class ConsumeRequest extends AbstractRequestMsg {
 		return pinData;
 	}
 
+	/**
+	 * 参数为十六进制
+	 * @param pinData
+	 */
 	public void setPinData(String pinData) {
-		this.pinData = pinData;
+		this.pinData = ISO8583Util.byteToBinaryString(ISO8583Util.hexStringToByte(pinData));
 	}
 
 	public String getSecurityInfo() {
@@ -333,5 +358,36 @@ public class ConsumeRequest extends AbstractRequestMsg {
 	public void setBarCode(String barCode) {
 		this.barCode = barCode;
 	}
-	
+
+	public String getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+
+	public String getPbocElecData() {
+		return pbocElecData;
+	}
+
+	public void setPbocElecData(String pbocElecData) {
+		this.pbocElecData = pbocElecData;
+	}
+
+	public String getRandomCode() {
+		return randomCode;
+	}
+
+	public void setRandomCode(String randomCode) {
+		this.randomCode = randomCode;
+	}
+
+	public String getVerifyCode() {
+		return verifyCode;
+	}
+
+	public void setVerifyCode(String verifyCode) {
+		this.verifyCode = verifyCode;
+	}
 }

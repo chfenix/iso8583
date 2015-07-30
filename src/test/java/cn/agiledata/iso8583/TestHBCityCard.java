@@ -1,11 +1,14 @@
 package cn.agiledata.iso8583;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import cn.agiledata.iso8583.entity.ConsumeRequest;
+import cn.agiledata.iso8583.entity.ConsumeResponse;
 import cn.agiledata.iso8583.entity.GetKeyRequest;
 import cn.agiledata.iso8583.entity.GetKeyResponse;
 import cn.agiledata.iso8583.entity.SignOutRequest;
@@ -208,6 +211,68 @@ public class TestHBCityCard extends TestBase {
 			objSignOutResp = new SignOutResponse();
 			msgResponse.getResponseData(objSignOutResp);
 			objSignOutResp.process();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	@Test
+	/**
+	 * 消费测试
+	 */
+	public void testConsume() throws Exception {
+		try {
+			ConsumeRequest objConsume = new ConsumeRequest();
+			objConsume.setPrimaryAcctNo("0500759000554459");	// 卡号
+			objConsume.setAmount(new BigDecimal("0.01"));	// 金额
+			objConsume.setTerminalNo("001003951");
+			
+			String[] arrSeqNo = getBatchAndSeqNo(null);
+			objConsume.setTraceNo(arrSeqNo[1]);		// 交易流水号
+			
+			objConsume.setMerNo("75900001");	// 商户号
+			objConsume.setPinData(DesUtil.desEncrypt(PIK, "06123456FFFFFFFF"));	// PIN
+			
+			
+			
+			objConsume.setBatchNo(arrSeqNo[0]);
+			objConsume.setRandomCode("0000000000000000");
+			objConsume.setVerifyCode("0000000000000000");
+			objConsume.setMac("0");
+			
+			// 发送签到请求
+			ConsumeResponse objConsumeResp;
+			Message8583 message = MessageFactory.createMessage(MessageFactory.MSG_SPEC_HBCC, objConsume.getCode(),null);
+			message.fillBodyData(objConsume);
+			message.pack();
+			
+			byte[] mac = message.getMacPlain();
+			log.info(ISO8583Util.bytesToHexString(mac));
+			
+			
+			String strMac = MACUtil.getX919Mac(MAK, ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
+			message.setMac(strMac);
+			
+			byte[] request = message.getMessage();
+			log.info(ISO8583Util.printBytes(request));
+			
+			
+			ISO8583Socket socket = new ISO8583Socket();
+			socket.connect("110.249.212.155", 12306,5000);
+			
+			socket.sendRequest(request);
+			
+			// 获取返回结果
+			byte[] response = socket.get8583Response(message.getRespLen());
+			Message8583 msgResponse = MessageFactory.createMessage(MessageFactory.MSG_SPEC_HBCC, objConsume.getCode(),null);
+			msgResponse.setResponse(response);
+			msgResponse.unpack();
+			
+			objConsumeResp = new ConsumeResponse();
+			msgResponse.getResponseData(objConsumeResp);
+			objConsumeResp.process();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

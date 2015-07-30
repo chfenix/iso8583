@@ -47,6 +47,11 @@ public class ConsumeResponse extends AbstractResponseMsg {
 	private String settleDate;
 	
 	/*
+	 * 清算年份
+	 */
+	private String settleYea;
+	
+	/*
 	 * 卡片序列号
 	 */
 	private String seqNo;
@@ -110,6 +115,21 @@ public class ConsumeResponse extends AbstractResponseMsg {
 	 * MAC
 	 */
 	private byte[] mac;
+	
+	/*
+	 * 账户类型
+	 */
+	private String accountType;
+	
+	/*
+	 * 清算机构
+	 */
+	private String settleInst;
+	
+	/*
+	 * PBOC电子钱包标准的交易信息
+	 */
+	private String pbocElecData;
 
 	public String getPrimaryAcctNo() {
 		return primaryAcctNo;
@@ -165,6 +185,14 @@ public class ConsumeResponse extends AbstractResponseMsg {
 
 	public void setSettleDate(String settleDate) {
 		this.settleDate = settleDate;
+	}
+	
+	public String getSettleYea() {
+		return settleYea;
+	}
+
+	public void setSettleYea(String settleYea) {
+		this.settleYea = settleYea;
 	}
 
 	public String getSeqNo() {
@@ -269,6 +297,30 @@ public class ConsumeResponse extends AbstractResponseMsg {
 
 	public void setMac(byte[] mac) {
 		this.mac = mac;
+	}
+	
+	public String getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+	
+	public String getSettleInst() {
+		return settleInst;
+	}
+
+	public void setSettleInst(String settleInst) {
+		this.settleInst = settleInst;
+	}
+	
+	public String getPbocElecData() {
+		return pbocElecData;
+	}
+
+	public void setPbocElecData(String pbocElecData) {
+		this.pbocElecData = pbocElecData;
 	}
 
 	@Override

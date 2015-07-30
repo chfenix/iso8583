@@ -33,7 +33,7 @@ public class DesUtil {
 			
 			// 数据长度必须为8的倍数
 			if(data.length%8 != 0) {
-				throw new DesCryptionException("expected length of des data must multiple of 8! [" + key.length +"]");
+				throw new DesCryptionException("expected length of des data must multiple of 8! [" + data.length +"]");
 			}
 			
 			SecretKeyFactory keyFactory;  

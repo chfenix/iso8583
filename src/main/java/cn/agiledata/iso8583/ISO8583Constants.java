@@ -40,7 +40,12 @@ public class ISO8583Constants {
 	 */
 	public static final String DES_TYPE_DES = "001";	// 单倍长密钥算法
 	public static final String DES_TYPE_3DES = "003";	// 双倍长密钥算法
-	public static final String DES_TYPE_3DES_TRACK = "004";	// 双倍长密钥算法（含磁道密钥
+	public static final String DES_TYPE_3DES_TRACK = "004";	// 双倍长密钥算法（含磁道密钥）
+	
+	/*
+	 * 域value特殊变量定义
+	 */
+	public static final String VALUE_DATE = "%d";		// 日期类型变量
 	
 
 

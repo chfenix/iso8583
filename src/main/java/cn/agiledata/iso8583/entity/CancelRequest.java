@@ -3,6 +3,7 @@ package cn.agiledata.iso8583.entity;
 import java.math.BigDecimal;
 
 import cn.agiledata.iso8583.MessageFactory;
+import cn.agiledata.iso8583.util.ISO8583Util;
 
 /**
  * 消费撤销请求报文
@@ -258,8 +259,12 @@ public class CancelRequest extends AbstractRequestMsg {
 		return pinData;
 	}
 
+	/**
+	 * 参数为十六进制
+	 * @param pinData
+	 */
 	public void setPinData(String pinData) {
-		this.pinData = pinData;
+		this.pinData = ISO8583Util.byteToBinaryString(ISO8583Util.hexStringToByte(pinData));
 	}
 
 	public String getSecurityInfo() {

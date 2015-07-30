@@ -421,7 +421,7 @@ public class Message8583 {
 					
 				if(objField == null || objField.getByteValue() == null) {
 					// 域值为空
-					log.error("mac plain setting [" + strKey + "] cannot found in message!");
+					log.info("the value of mac plain setting filed[" + strKey + "] is empty in message!");
 					continue;
 				}
 				

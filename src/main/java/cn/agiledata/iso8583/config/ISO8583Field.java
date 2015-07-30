@@ -1,10 +1,13 @@
 package cn.agiledata.iso8583.config;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 
 import cn.agiledata.iso8583.ISO8583Constants;
@@ -212,6 +215,9 @@ public class ISO8583Field implements Serializable {
 	public void build() {
 		
 		try {
+			// 处理Value函数定义
+			parseValue();
+			
 			// 数据检查
 			if("M".equalsIgnoreCase(req)) {
 				// 必须输入检查
@@ -444,5 +450,22 @@ public class ISO8583Field implements Serializable {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * 处理value特殊变量定义
+	 */
+	private void parseValue() {
+		try {
+			if(StringUtils.isNotBlank(this.value)) {
+				// value不为空，判断是否以特殊变量开头
+				if(this.value.startsWith(ISO8583Constants.VALUE_DATE)) {
+					// 日期变量，截取%d后的内容为日期格式
+					this.value = DateFormatUtils.format(new Date(), this.value.substring(2));
+				}
+			}			
+		} catch (Exception e) {
+			log.error("field [" + index + "] value parse error!", e);
+		}
 	}
 }
