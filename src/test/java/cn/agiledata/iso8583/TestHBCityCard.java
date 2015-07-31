@@ -102,6 +102,8 @@ public class TestHBCityCard extends TestBase {
 			msgResponse.getResponseData(objSignResp);
 			objSignResp.process();
 			
+			log.info(objSignResp.getRespMsg());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -241,6 +243,10 @@ public class TestHBCityCard extends TestBase {
 			objConsume.setVerifyCode("0000000000000000");
 			objConsume.setMac("0");
 			
+			Date transDate = new Date();
+			objConsume.setLocalDate(DateFormatUtils.format(transDate, "MMdd"));
+			objConsume.setLocalTime(DateFormatUtils.format(transDate, "HHmmss"));
+			
 			// 发送签到请求
 			ConsumeResponse objConsumeResp;
 			Message8583 message = MessageFactory.createMessage(MessageFactory.MSG_SPEC_HBCC, objConsume.getCode(),null);
@@ -272,6 +278,8 @@ public class TestHBCityCard extends TestBase {
 			objConsumeResp = new ConsumeResponse();
 			msgResponse.getResponseData(objConsumeResp);
 			objConsumeResp.process();
+			
+			log.info(objConsumeResp.getRespMsg());
 			
 		} catch (Exception e) {
 			e.printStackTrace();

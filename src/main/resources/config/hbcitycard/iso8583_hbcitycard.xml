@@ -91,8 +91,8 @@
 		<field index="3" alias="processCode"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M" value="000000"/><!--交易处理码 -->
 		<field index="4" alias="amount"  length="12" lengthType="FIX" mode="BCD" req="M" resp="M"/><!--交易金额 -->
 		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- POS终端交易流水 -->
-		<field index="12" alias="localTime"  length="6" lengthType="FIX" mode="BCD" resp="M" value="%dHHmmss"/><!-- 受卡方所在地时间 -->
-		<field index="13" alias="localDate"  length="4" lengthType="FIX" mode="BCD" resp="M" value="%dMMdd"/><!-- 受卡方所在地日期 -->
+		<field index="12" alias="localTime"  length="6" lengthType="FIX" mode="BCD" resp="M"/><!-- 受卡方所在地时间 -->
+		<field index="13" alias="localDate"  length="4" lengthType="FIX" mode="BCD" resp="M"/><!-- 受卡方所在地日期 -->
 		<field index="15" alias="settleDate"  length="4" lengthType="FIX" mode="BCD" resp="M"/><!-- 清算日期 -->
 		<field index="16" alias="settleYear"  length="4" lengthType="FIX" mode="BCD" resp="M"/><!-- 清算年份 -->
 		<field index="22" alias="entryMode"  length="3" lengthType="FIX" mode="BCD" req="M" value="021"/><!-- 服务点输入方式码 02:磁条 1:交易中包含PIN -->
@@ -109,10 +109,37 @@
 		<field index="58" alias="pbocElecData"  length="100" lengthType="LLLBCD" mode="BCD"  resp="M"/><!-- PBOC电子钱包/存折标准的交易信息 -->
 		<field index="60" alias="reserved60"  length="23" lengthType="LLLBCD" mode="BCD" req="M" resp="M" combo="'22'+batchNo+'000'+'0'+'0'+'0000000000'"/><!-- 自定义域 -->
 		<field index="63" alias="reserved63"  length="48" lengthType="LLLBCD" mode="ASC" resp="M" combo="'0'+'000'+terminalNo+operator+'001'"/><!-- 自定义域 -->
-		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
+		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C" value="0"/><!--MAC -->
 	</body>
 	<mac>
-		<keySequence>type|bitMap|2|3|4|11|12|13|22|25|41|42|52|58|60|63</keySequence>
+		<keySequence>type|bitMap|2|3|4|11|12|13|22|25|26|41|42|52|60|63</keySequence>
+	</mac>
+</trans>
+
+<!-- 消费冲正配置 -->
+<trans code="reverseConsume">
+	<head>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000003000"/>
+		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="602200000000"/>
+	</head>
+	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0400"/>
+	<body>
+		<field index="2" alias="primaryAcctNo"  length="19" lengthType="LLBCD" mode="BCD" req="M" resp="M"/><!--主账号 -->
+		<field index="3" alias="processCode"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M" value="000000"/><!--交易处理码 -->
+		<field index="4" alias="amount"  length="12" lengthType="FIX" mode="BCD" req="M" resp="M"/><!--交易金额 -->
+		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方系统跟踪号 -->
+		<field index="12" alias="localTime"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M" value="%dHHmmss"/><!-- 受卡方所在地时间 -->
+		<field index="13" alias="localDate"  length="4" lengthType="FIX" mode="BCD" req="M" resp="M" value="%dMMdd"/><!-- 受卡方所在地日期 -->
+		<field index="22" alias="entryMode"  length="3" lengthType="FIX" mode="BCD" req="M" value="021"/><!-- 服务点输入方式码 02:磁条 1:交易中包含PIN -->
+		<field index="25" alias="conditionMode"  length="2" lengthType="FIX" mode="BCD" req="M" resp="M" value="00"/><!-- 服务点条件码 00:正常提交 -->
+		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 冲正原因/应答码 -->
+		<field index="41" alias="terminalNo"  length="8" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
+		<field index="42" alias="merNo"  length="15" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 商户号 -->
+		<field index="60" alias="reserved60"  length="23" lengthType="LLLBCD" mode="BCD" req="M" resp="M" value="'22'+batchNo+'000'+'0'+'0'+originalDate"/><!-- 自定义域 -->
+		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C" value="0"/><!--MAC -->
+	</body>
+	<mac>
+		<keySequence>type|bitMap|2|3|4|11|12|13|25|39|41|42|60</keySequence>
 	</mac>
 </trans>
 </config>

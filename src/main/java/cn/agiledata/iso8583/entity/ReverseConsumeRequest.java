@@ -93,6 +93,11 @@ public class ReverseConsumeRequest extends AbstractRequestMsg {
 	private String batchNo;
 	
 	private String reserved60;
+	
+	/*
+	 * 原交易日期
+	 */
+	private String originalDate;
 
 	public ReverseConsumeRequest() {
 		this.code = MessageFactory.TRANS_CODE_REVERSE_CONSUME;
@@ -251,4 +256,14 @@ public class ReverseConsumeRequest extends AbstractRequestMsg {
 			return reserved60;
 		}
 	}
+
+	public String getOriginalDate() {
+		return originalDate;
+	}
+
+	public void setOriginalDate(String originalDate) {
+		this.originalDate = originalDate;
+	}
+	
+	
 }
