@@ -36,7 +36,7 @@ public class TestWoepay extends TestBase {
 			
 			// 发送签到请求
 			SignResponse objSignResp;
-			Message8583 message = MessageFactory.createMessage(MessageFactory.MSG_SPEC_CUPS, objSignReq.getCode(),null);
+			Message8583 message = MessageFactory.createMessage(MessageFactory.MSG_SPEC_WOEPAY, objSignReq.getCode(),null);
 			message.fillBodyData(objSignReq);
 			message.pack();
 			byte[] request = message.getMessage();
@@ -49,7 +49,7 @@ public class TestWoepay extends TestBase {
 			
 			// 获取返回结果
 			byte[] response = socket.get8583Response(message.getRespLen());
-			Message8583 msgResponse = MessageFactory.createMessage(MessageFactory.MSG_SPEC_CUPS, objSignReq.getCode(),null);
+			Message8583 msgResponse = MessageFactory.createMessage(MessageFactory.MSG_SPEC_WOEPAY, objSignReq.getCode(),null);
 			msgResponse.setResponse(response);
 			msgResponse.unpack();
 			
