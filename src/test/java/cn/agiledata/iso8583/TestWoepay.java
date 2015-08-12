@@ -1,5 +1,8 @@
 package cn.agiledata.iso8583;
 
+import java.util.Date;
+
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.Test;
 
 import cn.agiledata.iso8583.entity.SignRequest;
@@ -20,20 +23,18 @@ public class TestWoepay extends TestBase {
 		try {
 			// 设置签到报文
 			SignRequest objSignReq = new SignRequest();
-			objSignReq.setMerNo("123456789111115");		// 商户号
-			objSignReq.setTerminalNo("11115007");	// 终端号
-			
 			// 使用秒数生成批次号及流水号
 			String[] arrTransNo = getBatchAndSeqNo(null);
 			System.out.println("batchNo:" + arrTransNo[0] + " traceNo:" + arrTransNo[1]);
-			objSignReq.setBatchNo(arrTransNo[0]);	// 批次号
+			//objSignReq.setBatchNo(arrTransNo[0]);	// 批次号
 			objSignReq.setTraceNo(arrTransNo[1]);	// 交易号
-			
-			// 设置签到参数
-			objSignReq.setTransType("00");		// 交易类型:签到
-			objSignReq.setDesType("003");		// 3DES加密
-			objSignReq.setOperator("000");		// 操作员
-			
+			Date localDate = new Date();
+			objSignReq.setLocalDate(DateFormatUtils.format(localDate, "yyyyMMdd")); //收单方所在地日期
+			objSignReq.setLocalTime(DateFormatUtils.format(localDate, "HHmmss")); //收单方所在地时间
+			objSignReq.setTerminalSn("A001020150727001"); //终端序列号
+			objSignReq.setTerminalNo("00000001");	// 终端号
+			objSignReq.setMerNo("301100110014181");		// 商户号
+		
 			// 发送签到请求
 			SignResponse objSignResp;
 			Message8583 message = MessageFactory.createMessage(MessageFactory.MSG_SPEC_WOEPAY, objSignReq.getCode(),null);
@@ -43,7 +44,7 @@ public class TestWoepay extends TestBase {
 			System.out.println(ISO8583Util.printBytes(request));
 			
 			ISO8583Socket socket = new ISO8583Socket();
-			socket.connect("116.228.21.162",4008,5000);
+			socket.connect("123.125.97.253",8785,5000);
 			
 			socket.sendRequest(request);
 			

@@ -72,6 +72,16 @@ public class SignRequest extends AbstractRequestMsg {
 	 */
 	private String reserved63;
 	
+	/*
+	 * 交易日期
+	 */
+	private String localDate;
+	
+	/*
+	 * 交易时间
+	 */
+	private String localTime;
+	
 	private String mac;
 	
 	public SignRequest() {
@@ -173,6 +183,22 @@ public class SignRequest extends AbstractRequestMsg {
 	public void setReserved63(String reserved63) {
 		this.reserved63 = reserved63;
 	}
+	
+	public String getLocalDate() {
+		return localDate;
+	}
+
+	public void setLocalDate(String localDate) {
+		this.localDate = localDate;
+	}
+
+	public String getLocalTime() {
+		return localTime;
+	}
+
+	public void setLocalTime(String localTime) {
+		this.localTime = localTime;
+	}
 
 	public String getMac() {
 		return mac;
@@ -181,4 +207,6 @@ public class SignRequest extends AbstractRequestMsg {
 	public void setMac(String mac) {
 		this.mac = mac;
 	}
+	
+	
 }
