@@ -36,7 +36,7 @@
 		<field index="5" alias="mobile"  length="11" lengthType="FIX" mode="BCD" req="M" resp="M"/><!--手机号 -->
 		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方系统跟踪号 -->
 		<field index="12" alias="localTime"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方所在地时间 -->
-		<field index="13" alias="localDate"  length="4" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方所在地日期 -->
+		<field index="13" alias="localDate"  length="8" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方所在地日期 -->
 		<field index="22" alias="entryMode"  length="3" lengthType="FIX" mode="BCD" req="M" value="021"/><!-- 服务点输入方式码 -->
 		<field index="26" alias="transType"  length="2" lengthType="FIX" mode="BCD" req="M" /><!-- 交易方式 01，条形码支付 02，NFC刷卡支付 -->
 		<field index="38" alias="authRespCode"  length="6" lengthType="FIX" mode="ASC" resp="C"/><!-- 授权码 -->
@@ -49,7 +49,7 @@
 		<field index="53" alias="securityInfo"  length="16" lengthType="FIX" mode="BCD" req="C" resp="C" /><!-- 安全控制信息 -->
 		<field index="54" alias="balance"  length="20" lengthType="LLLBCD" mode="ASC" align="LEFTZERO" resp="C"/><!-- 余额 -->
 		<field index="58" alias="barCode"  length="20" lengthType="LLLBCD" mode="BCD" /><!-- 条形码 -->
-		<field index="60" alias="reserved60"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="C" /><!-- 自定义域 -->
+		<field index="60" alias="reserved60"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="C" combo="'A0000005'+'20150817110012'+'000'+'20150817110012'+'F3'+'01'+batchNo"/><!-- 自定义域 -->
 		<field index="61" alias="reserved61"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="C" /><!-- 自定义域 -->
 		<field index="63" alias="reserved63"  length="163" lengthType="LLLBCD" mode="ASC" resp="M"/><!--存放站点\优惠金额等信息 -->
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->

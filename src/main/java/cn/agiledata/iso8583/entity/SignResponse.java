@@ -61,6 +61,11 @@ public class SignResponse extends AbstractResponseMsg {
 	 */
 	private byte[] reserved62;
 	
+	/**
+	 * 自定义域63
+	 */
+	private byte[] reserved63;
+	
 	/*
 	 * 交易类型码
 	 */
@@ -168,6 +173,14 @@ public class SignResponse extends AbstractResponseMsg {
 		this.reserved62 = reserved62;
 	}
 	
+	public byte[] getReserved63() {
+		return reserved63;
+	}
+
+	public void setReserved63(byte[] reserved63) {
+		this.reserved63 = reserved63;
+	}
+
 	public String getTransType() {
 		return transType;
 	}
