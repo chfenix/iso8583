@@ -130,6 +130,21 @@ public class RefundRequest extends AbstractRequestMsg {
 	 */
 	private String originalDate;
 	
+	/*
+	 * 终端序列号
+	 */
+	private String terminalSn;
+	
+	/*
+	 * 交易日期
+	 */
+	private String localDate;
+	
+	/*
+	 * 交易时间
+	 */
+	private String localTime;
+	
 	public RefundRequest() {
 		this.code = MessageFactory.TRANS_CODE_REFUND;
 	}
@@ -326,5 +341,29 @@ public class RefundRequest extends AbstractRequestMsg {
 
 	public void setOriginalDate(String originalDate) {
 		this.originalDate = originalDate;
+	}
+
+	public String getTerminalSn() {
+		return terminalSn;
+	}
+
+	public void setTerminalSn(String terminalSn) {
+		this.terminalSn = terminalSn;
+	}
+
+	public String getLocalDate() {
+		return localDate;
+	}
+
+	public void setLocalDate(String localDate) {
+		this.localDate = localDate;
+	}
+
+	public String getLocalTime() {
+		return localTime;
+	}
+
+	public void setLocalTime(String localTime) {
+		this.localTime = localTime;
 	}
 }

@@ -11,6 +11,8 @@ import cn.agiledata.iso8583.entity.ConsumeRequest;
 import cn.agiledata.iso8583.entity.ConsumeResponse;
 import cn.agiledata.iso8583.entity.GetKeyRequest;
 import cn.agiledata.iso8583.entity.GetKeyResponse;
+import cn.agiledata.iso8583.entity.RefundRequest;
+import cn.agiledata.iso8583.entity.RefundResponse;
 import cn.agiledata.iso8583.entity.ReverseConsumeRequest;
 import cn.agiledata.iso8583.entity.ReverseConsumeResponse;
 import cn.agiledata.iso8583.entity.SignOutRequest;
@@ -345,6 +347,76 @@ public class TestHBCityCard extends TestBase {
 			objReverseResp.process();
 			
 			log.info(objReverseResp.getRespMsg());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	@Test
+	/**
+	 * 退货测试
+	 * @throws Exception
+	 */
+	public void testRefund() throws Exception {
+		try {
+			RefundRequest objRefund = new RefundRequest();
+			objRefund.setPrimaryAcctNo("0500759000554459");	// 卡号
+			objRefund.setAmount(new BigDecimal("0.01"));	// 金额
+			
+			String[] arrSeqNo = getBatchAndSeqNo(null);
+			System.out.println("transNo:" + arrSeqNo[0] + "|" + arrSeqNo[1]);
+			objRefund.setTraceNo(arrSeqNo[1]);
+			
+			
+			Date transDate = new Date();
+			objRefund.setLocalDate(DateFormatUtils.format(transDate, "MMdd"));
+			objRefund.setLocalTime(DateFormatUtils.format(transDate, "HHmmss"));
+			
+			objRefund.setTerminalNo("001003951");	// 终端号
+			objRefund.setMerNo("75900001");	// 商户号
+			
+			objRefund.setBatchNo(arrSeqNo[0]);	// 批次号
+			objRefund.setTerminalSn("0100000000003951");
+
+			objRefund.setRefNo("133817819577");	// 原交易参考号
+			objRefund.setOriginalDate("0820133817");	// 原交易时间
+			objRefund.setOriginalBatchNo("001440");		// 原批次号
+			objRefund.setOriginalTraceNo("049097");		// 原流水号
+			objRefund.setMac("0");
+			
+			// 发送退货请求
+			Message8583 message = MessageFactory.createMessage(MessageFactory.MSG_SPEC_HBCC, objRefund.getCode(),null);
+			message.fillBodyData(objRefund);
+			message.pack();
+			
+			byte[] mac = message.getMacPlain();
+			log.info(ISO8583Util.bytesToHexString(mac));
+			
+			
+			String strMac = MACUtil.getHBCCEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
+			message.setMac(strMac);
+			
+			byte[] request = message.getMessage();
+			log.info(ISO8583Util.printBytes(request));
+			
+			
+			ISO8583Socket socket = new ISO8583Socket();
+			socket.connect("110.249.212.155", 12306,5000);
+			
+			socket.sendRequest(request);
+			
+			// 获取返回结果
+			byte[] response = socket.get8583Response(message.getRespLen());
+			Message8583 msgResponse = MessageFactory.createMessage(MessageFactory.MSG_SPEC_HBCC, objRefund.getCode(),null);
+			msgResponse.setResponse(response);
+			msgResponse.unpack();
+			
+			RefundResponse objRefundResp = new RefundResponse();
+			msgResponse.getResponseData(objRefundResp);
+			objRefundResp.process();
+			
+			log.info(objRefundResp.getRespMsg());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
