@@ -2,8 +2,6 @@ package cn.agiledata.iso8583.entity;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.lang3.StringUtils;
-
 import cn.agiledata.iso8583.MessageFactory;
 
 /**
@@ -98,6 +96,16 @@ public class ReverseConsumeRequest extends AbstractRequestMsg {
 	 * 原交易日期
 	 */
 	private String originalDate;
+	
+	/*
+	 * 交易日期
+	 */
+	private String localDate;
+	
+	/*
+	 * 交易时间
+	 */
+	private String localTime;
 
 	public ReverseConsumeRequest() {
 		this.code = MessageFactory.TRANS_CODE_REVERSE_CONSUME;
@@ -237,24 +245,24 @@ public class ReverseConsumeRequest extends AbstractRequestMsg {
 		this.reserved60 = reserved60;
 	}
 	
-	/**
-	 * 获取60域值
-	 * 60.1	交易类型码
-	 * 60.2	批次号
-	 * 60.3	网络管理码
-	 * 60.4	终端读取能力
-	 * 60.5	基于PBOC借/贷记标准的IC卡条件代码
-	 * 60.6	支持部分扣款和返回余额的标志
-	 * 60.7	账户类型
-	 * @return
-	 */
+	public String getLocalDate() {
+		return localDate;
+	}
+
+	public void setLocalDate(String localDate) {
+		this.localDate = localDate;
+	}
+
+	public String getLocalTime() {
+		return localTime;
+	}
+
+	public void setLocalTime(String localTime) {
+		this.localTime = localTime;
+	}
+
 	public String getReserved60() {
-		if(StringUtils.isBlank(this.reserved60)) {
-			return transType + batchNo + "000";
-		}
-		else {
-			return reserved60;
-		}
+		return this.reserved60;
 	}
 
 	public String getOriginalDate() {

@@ -11,6 +11,8 @@ import cn.agiledata.iso8583.entity.ConsumeRequest;
 import cn.agiledata.iso8583.entity.ConsumeResponse;
 import cn.agiledata.iso8583.entity.GetKeyRequest;
 import cn.agiledata.iso8583.entity.GetKeyResponse;
+import cn.agiledata.iso8583.entity.ReverseConsumeRequest;
+import cn.agiledata.iso8583.entity.ReverseConsumeResponse;
 import cn.agiledata.iso8583.entity.SignOutRequest;
 import cn.agiledata.iso8583.entity.SignOutResponse;
 import cn.agiledata.iso8583.entity.SignRequest;
@@ -230,6 +232,7 @@ public class TestHBCityCard extends TestBase {
 			objConsume.setTerminalNo("001003951");
 			
 			String[] arrSeqNo = getBatchAndSeqNo(null);
+			System.out.println("transNo:" + arrSeqNo[0] + "|" + arrSeqNo[1]);
 			objConsume.setTraceNo(arrSeqNo[1]);		// 交易流水号
 			
 			objConsume.setMerNo("75900001");	// 商户号
@@ -287,6 +290,68 @@ public class TestHBCityCard extends TestBase {
 	}
 	
 	@Test
+	/**
+	 * 消费冲正测试
+	 * @throws Exception
+	 */
+	public void testConsumeReverse() throws Exception {
+		try {
+			ReverseConsumeRequest objReverse = new ReverseConsumeRequest();
+			
+			objReverse.setPrimaryAcctNo("0500759000554459");	// 卡号
+			objReverse.setAmount(new BigDecimal("0.01"));	// 金额
+			objReverse.setTraceNo("039751");		// 交易流水号
+			objReverse.setBatchNo("001440");	// 批次号
+			objReverse.setOriginalDate("0820110231");	// 原交易时间
+			
+			Date transDate = new Date();
+			objReverse.setLocalDate(DateFormatUtils.format(transDate, "MMdd"));
+			objReverse.setLocalTime(DateFormatUtils.format(transDate, "HHmmss"));
+			objReverse.setRespCode("06");
+			
+			objReverse.setTerminalNo("001003951");	// 终端号
+			objReverse.setMerNo("75900001");	// 商户号
+			
+			// 发送消费冲正请求
+			
+			Message8583 message = MessageFactory.createMessage(MessageFactory.MSG_SPEC_HBCC, objReverse.getCode(),null);
+			message.fillBodyData(objReverse);
+			message.pack();
+			
+			byte[] mac = message.getMacPlain();
+			log.info(ISO8583Util.bytesToHexString(mac));
+			
+			
+			String strMac = MACUtil.getHBCCEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
+			message.setMac(strMac);
+			
+			byte[] request = message.getMessage();
+			log.info(ISO8583Util.printBytes(request));
+			
+			
+			ISO8583Socket socket = new ISO8583Socket();
+			socket.connect("110.249.212.155", 12306,5000);
+			
+			socket.sendRequest(request);
+			
+			// 获取返回结果
+			byte[] response = socket.get8583Response(message.getRespLen());
+			Message8583 msgResponse = MessageFactory.createMessage(MessageFactory.MSG_SPEC_HBCC, objReverse.getCode(),null);
+			msgResponse.setResponse(response);
+			msgResponse.unpack();
+			
+			ReverseConsumeResponse objReverseResp = new ReverseConsumeResponse();
+			msgResponse.getResponseData(objReverseResp);
+			objReverseResp.process();
+			
+			log.info(objReverseResp.getRespMsg());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	@Test
 	public void testSplitKey() {
 		try {
 			String reserved63 = "00000169895049C8DEE6FE1D1BFD40A0150789A7447E5CF00C94090B077C0957CF13D301000000000039510000010039510000";
@@ -328,13 +393,5 @@ public class TestHBCityCard extends TestBase {
 		}
 	}
 	
-	@Test
-	public void testMac() {
-		try {
-			System.out.println(MACUtil.getHBCCEcbMac(MAK, "0200703804C000C01013160500759000554459000000000000000001977960175239081902100000013030303030313030333935313030303037353930303030319FE085F69F4982850023220014390000000000000000001630303030303031303033393531303031"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 }

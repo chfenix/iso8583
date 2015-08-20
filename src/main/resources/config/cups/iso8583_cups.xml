@@ -139,7 +139,7 @@
 		<field index="42" alias="merNo"  length="15" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 商户号 -->
 		<field index="44" alias="additionalData"  length="25" lengthType="LLBCD" mode="ASC" req="C" resp="M"/><!-- 附加响应数据 -->
 		<field index="49" alias="currency"  length="3" lengthType="FIX" mode="ASC" req="M" resp="M"  value="156"/><!-- 交易货币代码 -->
-		<field index="60" alias="reserved60"  length="17" lengthType="LLLBCD" mode="BCD" req="M" resp="M"/><!-- 自定义域 -->
+		<field index="60" alias="reserved60"  length="17" lengthType="LLLBCD" mode="BCD" req="M" resp="M" combo="transType+batchNo+'000'"/><!-- 自定义域 -->
 		<field index="62" alias="reserved62"  length="72" lengthType="LLLBCD" mode="BIN" req="C" resp="C"/><!-- 自定义域 -->
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>

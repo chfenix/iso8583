@@ -85,7 +85,7 @@ public class BCDUtil {
 			return null;
 		}
 		if (!canbeBCD(param)) {
-			log.error("argument can not convert to BCD. the data out of rang [0x00~0x0F],[0x30 ~ 0x39], [0x41 ~ 0x46],[0x61~0x66]");
+			log.error("argument [" + param + "] can not convert to BCD. the data out of rang [0x00~0x0F],[0x30 ~ 0x39], [0x41 ~ 0x46],[0x61~0x66]");
 			throw new IllegalDataException("[" + param + "] can not convert to BCD.");
 		}
 		for (int i = 0; i < param.length; i++) {
