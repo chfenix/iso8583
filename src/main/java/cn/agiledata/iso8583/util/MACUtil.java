@@ -17,6 +17,7 @@ public class MACUtil {
 	 */
 	public static final int FILL_0X00 = 0;	// 补位0x00
 	public static final int FILL_0X80 = 8;	// 补位0x80
+	public static final int FILL_NAN = -1;	// 补位0x80
 	
 	/**
 	 * ANSI X9.9/X9.19 MAC计算
@@ -98,6 +99,9 @@ public class MACUtil {
 			else if(filleType == FILL_0X80) {
 				// 补位0x80
 				macData = macData + "80";
+			}
+			else if(filleType == FILL_NAN) {
+				// 不进行补位
 			}
 			else {
 				// 补位类型错误
@@ -219,6 +223,63 @@ public class MACUtil {
 			System.arraycopy(byteHexMac, 0, byteMac, 0, 8);
 			
 			return ISO8583Util.bytesToHexString(byteMac);
+		}catch (MacException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new MacException(e);
+		}
+	}
+	
+	/**
+	 * 河北一卡通ECB算法
+	 * 
+	 * @param mak  Mac Key 十六进制 8字节
+	 * @param macBlock   需要计算mac的明文域数据 十六进制
+	 * @return mac  十六进制
+	 * @throws MacException
+	 */
+	public static String getHBCCEcbMac(String mak,String macBlock) throws MacException {
+		try {
+			// 参数检查
+			
+			// MAK必须为8位
+			if(StringUtils.isBlank(mak) || mak.trim().length() != 16) {
+				throw new MacException("MAK length must be 8 Byte! [" + mak + "]");
+			}
+			
+			// MAC明文数据不能为空
+			if(StringUtils.isBlank(macBlock)) {
+				throw new MacException("Mac Data must be not null!");
+			}
+			
+			// 明文不足8字节倍数时补足位数
+			macBlock = ISO8583Util.fillMac(macBlock);
+			
+			// 分段截取8字节，并进行异或 (注：ASCII明文16位十六进制即为8字节)
+			byte[] xorSrc = ISO8583Util.hexStringToByte("0000000000000000");	// 初始异或值为8字节0
+			for (int i = 0; i < macBlock.length()/16; i++) {
+				// 截取8字节数据
+				String strXor = macBlock.substring(i*16,i*16+16);
+				byte[]  xorDest = ISO8583Util.hexStringToByte(strXor);
+				
+				// 与上一次结果进行异或
+				byte[] xorResult=new byte[8];
+				for (int j = 0; j < 8; j++) {
+					xorResult[j] = (byte) (xorSrc[j] ^ xorDest[j]);
+				}
+				
+				// 异或结果作为下次异或元数据
+				xorSrc = xorResult;
+			}
+			
+			// 将最后的异或结果(8字节)转为16进制后获取相关字节数组（16个字节）
+			byte[] xorResult = ISO8583Util.bytesToHexString(xorSrc).getBytes();
+
+			// 异或结果转十六进制字符串再加8000000000000000
+			String strHexMac = ISO8583Util.bytesToHexString(xorResult) + "8000000000000000";
+			
+			// 使用X9.9计算MAC
+			return getX919Mac(mak, strHexMac, FILL_NAN);
 		}catch (MacException e) {
 			throw e;
 		} catch (Exception e) {

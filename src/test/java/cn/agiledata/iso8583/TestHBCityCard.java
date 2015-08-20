@@ -33,7 +33,7 @@ public class TestHBCityCard extends TestBase {
 	
 	// 以下三个密钥都为明文使用
 	private static final String TMK = "1A3D2ACE8C519702";
-	private static final String PIK = "1D1BFD40A0150789";
+	private static final String PIK = "E99202E92F5DEF62";
 	private static final String MAK = "B73622783C5A48D4";
 	
 	@Test
@@ -47,7 +47,6 @@ public class TestHBCityCard extends TestBase {
 			signIn();
 			getKey();
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 	}
 
@@ -257,7 +256,7 @@ public class TestHBCityCard extends TestBase {
 			log.info(ISO8583Util.bytesToHexString(mac));
 			
 			
-			String strMac = MACUtil.getX919Mac(MAK, ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
+			String strMac = MACUtil.getHBCCEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
 			message.setMac(strMac);
 			
 			byte[] request = message.getMessage();
@@ -306,7 +305,7 @@ public class TestHBCityCard extends TestBase {
 			System.out.println("TMK:" + strTMK);
 			
 			// 解密pik
-			System.out.println("PIK: Plain:" + strPIK + " CRYPTION:" + DesUtil.desDecrypt(strTMK, strPIK));
+			System.out.println("PIK: Plain:" + DesUtil.desDecrypt(strTMK, strPIK) + " CRYPTION:" + strPIK);
 			
 			// 解密mak
 			String strMakLeft = strMAK.substring(0,16);
@@ -325,6 +324,15 @@ public class TestHBCityCard extends TestBase {
 			System.out.println("MAK: Plain:" + ISO8583Util.bytesToHexString(xorResult) + " CRYPTION:" + DesUtil.desEncrypt(strTMK, ISO8583Util.bytesToHexString(xorResult)));
 		} catch (DesCryptionException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testMac() {
+		try {
+			System.out.println(MACUtil.getHBCCEcbMac(MAK, "0200703804C000C01013160500759000554459000000000000000001977960175239081902100000013030303030313030333935313030303037353930303030319FE085F69F4982850023220014390000000000000000001630303030303031303033393531303031"));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

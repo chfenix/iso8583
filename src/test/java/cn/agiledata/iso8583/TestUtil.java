@@ -77,4 +77,10 @@ public class TestUtil extends TestBase {
 		System.out.println("enmak:" + DesUtil.desEncrypt(strTMK, ISO8583Util.bytesToHexString(xorResult)));
 	}
 	
+	@Test
+	public void testECBMac() throws Exception {
+		String strTest = "1234567890123456";
+		System.out.println(MACUtil.getCupEcbMac("4444444444444444", strTest));
+	}
+	
 }
