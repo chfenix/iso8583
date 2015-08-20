@@ -1,5 +1,6 @@
 package cn.agiledata.iso8583.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -151,6 +152,30 @@ public class ISO8583Socket {
 		}
 
 		return msgBody;
+	}
+	
+	/**
+	 * 读取返回内容
+	 * @throws Exception 
+	 */
+	public byte[] getResponse() throws Exception {
+		try {
+		    ByteArrayOutputStream outSteam = new ByteArrayOutputStream();  
+		    byte[] buffer = new byte[1024];  
+		    int len = -1;  
+		    while ((len = inputStream.read(buffer)) != -1) {  
+		        outSteam.write(buffer, 0, len);  
+		    }  
+ 
+		    byte[] respMsg=outSteam.toByteArray();
+		    log.info("response content:\n" + ISO8583Util.printBytes(respMsg));
+		    return respMsg; 
+		} catch (Exception e) {
+			e.printStackTrace();
+			close();
+			throw e;
+		} finally {
+		}
 	}
 
 	public Socket getSocket() {

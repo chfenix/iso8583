@@ -1,5 +1,6 @@
 package cn.agiledata.iso8583;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import cn.agiledata.iso8583.entity.ConsumeRequest;
 import cn.agiledata.iso8583.entity.ConsumeResponse;
 import cn.agiledata.iso8583.entity.SignRequest;
 import cn.agiledata.iso8583.entity.SignResponse;
+import cn.agiledata.iso8583.exception.DesCryptionException;
 import cn.agiledata.iso8583.util.DesUtil;
 import cn.agiledata.iso8583.util.ISO8583Socket;
 import cn.agiledata.iso8583.util.ISO8583Util;
@@ -25,10 +27,62 @@ import cn.agiledata.iso8583.util.MACUtil;
 public class TestWoepay extends TestBase {
 	private static final Logger log = Logger.getLogger(TestWoepay.class);
 	
+	private static final String mainKey="9E629829F77A6E67436285292A1CAB54";
+	
 	// 以下三个密钥都为明文使用
-	private static final String TMK = "1A3D2ACE8C519702";
 	private static final String PIK = "1D1BFD40A0150789";
 	private static final String MAK = "B73622783C5A48D4";
+	
+	@Test
+	public void doubleDesDecrypt(){
+		try {
+/*		batchNo============================>>000001
+pik===============>>B21C399705AB2FE8ED7A17138489EC53
+mak===============>>ACFD330996D61F6B5C73659DB971D23F
+			*/
+			String macKey=DesUtil.doubleDesDecrypt(mainKey, "ACFD330996D61F6B5C73659DB971D23F");
+			String pinKey=DesUtil.doubleDesDecrypt(macKey, "B21C399705AB2FE8ED7A17138489EC53");
+			System.out.println("macKey:"+macKey+"  "+"pinKey:"+pinKey);
+			
+		} catch (DesCryptionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	/**
+	 * 
+	 */
+	public void queryPublicKey(){
+		String terminalSn="A001020150727001";
+		String terminalSnHex=ISO8583Util.bytesToHexString(terminalSn.getBytes());
+		System.out.println("terminalSnHex==================>>"+terminalSnHex);
+		
+		String terminalNo="00000001";
+		String terminalNoHex=ISO8583Util.bytesToHexString(terminalNo.getBytes());
+		System.out.println("terminalNoHex==================>>"+terminalNoHex);
+		
+		String merNo="301100110014181";
+		String merNoHex=ISO8583Util.bytesToHexString(merNo.getBytes());
+		System.out.println("merNoHex==================>>"+merNoHex);
+		
+		String messageHex="FF0105"+"F90100"+"2810"+terminalSnHex+"2908"+terminalNoHex+"2A0F"+merNoHex;
+		System.out.println("messageHex=================>>"+messageHex);
+		
+		ISO8583Socket socket = new ISO8583Socket();
+		try {
+			socket.connect("123.125.97.253",8786,5000);
+			socket.sendRequest(messageHex.getBytes());
+			// 获取返回结果
+			byte[] response = socket.getResponse();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
 
 	@Test
 	/**
@@ -62,7 +116,7 @@ public class TestWoepay extends TestBase {
 			socket.connect("123.125.97.253",8785,5000);
 			
 			socket.sendRequest(request);
-			
+
 			// 获取返回结果
 			byte[] response = socket.get8583Response(message.getRespLen());
 			Message8583 msgResponse = MessageFactory.createMessage(MessageFactory.MSG_SPEC_WOEPAY, objSignReq.getCode(),null);
