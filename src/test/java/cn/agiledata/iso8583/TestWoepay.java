@@ -129,10 +129,10 @@ mak===============>>ACFD330996D61F6B5C73659DB971D23F
 			
 			System.out.println(objSignResp.getRespCode() + " "  + objSignResp.getRespMsg());
 			
-			System.out.println("====================>>"+ISO8583Util.printBytes(objSignResp.getReserved63()));
+			System.out.println("====================>>"+ISO8583Util.printBytes(objSignResp.getWoepayWk()));
 			String respBatchNo=objSignResp.getReserved60().substring(43,49);
 			System.out.println("batchNo============================>>"+respBatchNo);
-			getPIKandMAK(objSignResp,objSignResp.getReserved63());
+			getPIKandMAK(objSignResp,objSignResp.getWoepayWk());
 
 		} catch (Exception e) {
 			e.printStackTrace();
