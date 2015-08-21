@@ -36,9 +36,9 @@ public class TestHBCityCard extends TestBase {
 	private static final Logger log = Logger.getLogger(TestHBCityCard.class);
 	
 	// 以下三个密钥都为明文使用
-	private static final String TMK = "1A3D2ACE8C519702";
-	private static final String PIK = "E99202E92F5DEF62";
-	private static final String MAK = "B73622783C5A48D4";
+	private static final String TMK = "EC0E89DC76853BC4";
+	private static final String PIK = "46163754D6D5F2D3";
+	private static final String MAK = "659A4E5F35FF557D";
 	
 	@Test
 	/**
@@ -64,12 +64,12 @@ public class TestHBCityCard extends TestBase {
 			
 			String terminalTraceNo = String.valueOf(new Date().getTime());
 			terminalTraceNo = terminalTraceNo.substring(0,terminalTraceNo.length()-3);
-			objSignReq.setTerminalNo("001003951");
+			objSignReq.setTerminalNo("001003949");
 			objSignReq.setTraceNo("0");
 			objSignReq.setSeqNo(terminalTraceNo);
 			objSignReq.setTransTime(DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));	// 交易时间
 			objSignReq.setOperator("000001");
-			objSignReq.setTerminalSn("0100000000003951");	// PASMid
+			objSignReq.setTerminalSn("0100000000003949");	// PASMid
 			objSignReq.setMac("0");
 			
 			
@@ -177,12 +177,12 @@ public class TestHBCityCard extends TestBase {
 			
 			String terminalTraceNo = String.valueOf(new Date().getTime());
 			terminalTraceNo = terminalTraceNo.substring(0,terminalTraceNo.length()-3);
-			objSignOutReq.setTerminalNo("001003951");
+			objSignOutReq.setTerminalNo("001003949");
 			objSignOutReq.setTraceNo("0");
 			objSignOutReq.setSeqNo(terminalTraceNo);
 			objSignOutReq.setTransTime(DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));	// 交易时间
 			objSignOutReq.setOperator("000001");
-			objSignOutReq.setTerminalSn("0100000000003951");	// PASMid
+			objSignOutReq.setTerminalSn("0100000000003949");	// PASMid
 			objSignOutReq.setMac("0");
 			
 			// 发送签到请求
@@ -229,9 +229,9 @@ public class TestHBCityCard extends TestBase {
 	public void testConsume() throws Exception {
 		try {
 			ConsumeRequest objConsume = new ConsumeRequest();
-			objConsume.setPrimaryAcctNo("0500759000554459");	// 卡号
+			objConsume.setPrimaryAcctNo("0500530000000090");	// 卡号
 			objConsume.setAmount(new BigDecimal("0.01"));	// 金额
-			objConsume.setTerminalNo("001003951");
+			objConsume.setTerminalNo("001003949");
 			
 			String[] arrSeqNo = getBatchAndSeqNo(null);
 			System.out.println("transNo:" + arrSeqNo[0] + "|" + arrSeqNo[1]);
@@ -465,5 +465,14 @@ public class TestHBCityCard extends TestBase {
 		}
 	}
 	
+	@Test
+	public void test() {
+		try {
+			System.out.println(DesUtil.desDecrypt("EC0E89DC76853BC4", "887543F618778E0E"));
+		} catch (DesCryptionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 }
