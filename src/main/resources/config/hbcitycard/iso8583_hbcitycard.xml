@@ -79,6 +79,23 @@
 	</mac>
 </trans>
 
+<!-- IC卡终端参数发布（PC）参数下载  -->
+<trans code="downParam">
+	<head>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000630000"/>
+		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="601000000000"/>
+	</head>
+	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0700"/> 
+	<body>
+		<field index="3" alias="processCode"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M" value="994003"/><!--交易处理码 -->
+		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" resp="M" value="00"/><!-- 应答码 -->
+		<field index="41" alias="terminalCode"  length="12" lengthType="FIX" mode="ASC" req="M" resp="M" combo="'000'+terminalNo"/><!-- 终端号 -->
+		<field index="42" alias="merCode"  length="12" lengthType="FIX" mode="ASC" req="M" resp="M" combo="'0000'+merNo"/><!--商户代码（4个0+8位商户代码） -->
+		<field index="60" alias="reserved60"  length="21" lengthType="LLLBCD" mode="BCD" req="M" resp="M" combo="'0000000000'+'0000000000'+'0'"/><!-- 自定义域 -->
+		<field index="63" alias="paramList"  length="34" lengthType="LLLBCD" mode="BIN" resp="M" /><!-- 自定义域 -->
+	</body>
+</trans>
+
 <!-- 消费配置 -->
 <trans code="consume">
 	<head>

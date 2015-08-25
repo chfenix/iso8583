@@ -3,12 +3,15 @@ package cn.agiledata.iso8583;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import cn.agiledata.iso8583.entity.ConsumeRequest;
 import cn.agiledata.iso8583.entity.ConsumeResponse;
+import cn.agiledata.iso8583.entity.DownParamRequest;
+import cn.agiledata.iso8583.entity.DownParamResponse;
 import cn.agiledata.iso8583.entity.GetKeyRequest;
 import cn.agiledata.iso8583.entity.GetKeyResponse;
 import cn.agiledata.iso8583.entity.RefundRequest;
@@ -49,7 +52,7 @@ public class TestHBCityCard extends TestBase {
 		try {
 			signOut();
 			signIn();
-			getKey();
+//			getKey();
 		} catch (Exception e) {
 		}
 	}
@@ -216,6 +219,78 @@ public class TestHBCityCard extends TestBase {
 			objSignOutResp = new SignOutResponse();
 			msgResponse.getResponseData(objSignOutResp);
 			objSignOutResp.process();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	@Test
+	public void testDownParam() throws Exception {
+		try {
+			/*DownParamRequest paramReq = new DownParamRequest();
+			
+			paramReq.setTerminalNo("001003951");
+			paramReq.setMerNo("75900001");	// 商户号
+			
+			// 发送签到请求
+			
+			Message8583 message = MessageFactory.createMessage(MessageFactory.MSG_SPEC_HBCC, paramReq.getCode(),null);
+			message.fillBodyData(paramReq);
+			message.pack();
+			
+			byte[] request = message.getMessage();
+			log.info(ISO8583Util.printBytes(request));
+			
+			
+			ISO8583Socket socket = new ISO8583Socket();
+			socket.connect("110.249.212.155", 12306,50000);
+			
+			socket.sendRequest(request);
+			
+			// 获取返回结果
+			byte[] response = socket.get8583Response(message.getRespLen());*/
+			DownParamResponse paramResp = new DownParamResponse();
+			String strTest = "600000006360100000000007102000000002C000129940033030303030303031303033393531303030303735393030303031001100000000080001935931303131312020202020202020202020202020202020202031303034353331455443BFA820202020202020202020202031303034353531C8C8B9BABFA8202020202020202020202031303034383031C6D5CDA8BFA8202020202020202020202031303034383631B9F3B1F6BFA8202020202020202020202031303034393031B6A8D6B5BFA8202020202020202020202031303132393837352020202020202020202020202020202031303032D6D0CAAFD3CDB2E2CAD420202020202020202020";
+			byte[] response = ISO8583Util.hexStringToByte(strTest);
+			
+			Message8583 msgResponse = MessageFactory.createMessage(MessageFactory.MSG_SPEC_HBCC, paramResp.getCode(),null);
+			msgResponse.setResponse(response);
+			msgResponse.unpack();
+			
+			msgResponse.getResponseData(paramResp);
+			paramResp.process();
+			
+			byte[] respParam = paramResp.getParamList();
+			String strCardType = "";
+			String strDiscount = null;
+			String strFlag = new String(ArrayUtils.subarray(respParam, 0, 1),"GB2312");
+			if("Y".equals(strFlag)) {
+				// 有参数，继续向下解析
+				// 参数反馈示例 Y10111                   1004531ETC卡            1004551热购卡           1004801普通卡           1004861贵宾卡           1004901定值卡           10129875                1002中石油测试          
+				for (int i = 0; i < (respParam.length -1)/24; i++) {
+					String strParam = new String(ArrayUtils.subarray(respParam, i*24+1,(i+1)*24+1),"GB2312");
+					// 解析参数
+					String strType = strParam.substring(0,4);
+					// 系统只关注1004卡类型 1012消费折扣
+					if("1004".equals(strType)) {
+						// 卡类型白名单
+						// 判断是否为可用标志
+						if("1".equals(strParam.substring(6,7))) {
+							// 标志位可用，截取卡类型保存
+							strCardType += strParam.substring(4,6) + ",";
+						}
+					}
+					
+					if("1012".equals(strType)) {
+						// 折扣
+						strDiscount = strParam.substring(4,8);
+					}
+				}
+			}
+			
+			System.out.println(strCardType);
+			System.out.println(strDiscount);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -468,8 +543,7 @@ public class TestHBCityCard extends TestBase {
 	@Test
 	public void test() {
 		try {
-			System.out.println(DesUtil.desDecrypt("EC0E89DC76853BC4", "887543F618778E0E"));
-		} catch (DesCryptionException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

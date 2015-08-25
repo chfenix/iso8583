@@ -439,7 +439,7 @@ public class ISO8583Field implements Serializable {
 				}
 			}
 			else if(mode.equals(ISO8583Constants.MODE_ASC)) {
-				this.value = new String(this.byteValue).trim();
+				this.value = new String(this.byteValue,"GB2312").trim();
 			}
 			else if(mode.equals(ISO8583Constants.MODE_BIN)) {
 				this.value = ISO8583Util.byteToBinaryString(this.byteValue);

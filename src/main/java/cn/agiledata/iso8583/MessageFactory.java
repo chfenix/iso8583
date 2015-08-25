@@ -48,6 +48,7 @@ public class MessageFactory {
 	public static final String TRANS_CODE_REVERSE_CONSUME = "reverseConsume";	// 消费冲正
 	public static final String TRANS_CODE_CANCEL = "cancel";	// 消费撤销
 	public static final String TRANS_CODE_REFUND = "refund";	//  退款
+	public static final String TRANS_CODE_DOWN_PARAM = "downParam";	//  参数下载
 	
 	public static final String TRANS_CODE_GETKEY = "getKey";	// Pin Key /Mac Key请求交易（河北一卡通特有交易）
 	
