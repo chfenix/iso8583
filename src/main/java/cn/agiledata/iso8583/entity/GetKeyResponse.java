@@ -57,7 +57,7 @@ public class GetKeyResponse extends AbstractResponseMsg {
 	private String reserved60;
 	
 	/*
-	 * 自定义域62
+	 * 自定义域63
 	 */
 	private String reserved63;
 	
