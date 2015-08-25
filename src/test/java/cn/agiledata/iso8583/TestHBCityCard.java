@@ -66,10 +66,10 @@ public class TestHBCityCard extends TestBase {
 			SignRequest objSignReq = new SignRequest();
 			
 			String terminalTraceNo = String.valueOf(new Date().getTime());
-			terminalTraceNo = terminalTraceNo.substring(0,terminalTraceNo.length()-3);
+			terminalTraceNo = terminalTraceNo.substring(0,terminalTraceNo.length()-4);
 			objSignReq.setTerminalNo("001003949");
 			objSignReq.setTraceNo("0");
-			objSignReq.setSeqNo(terminalTraceNo);
+			objSignReq.setSeqNo("0" + terminalTraceNo);
 			objSignReq.setTransTime(DateFormatUtils.format(new Date(), "yyyyMMddHHmmss"));	// 交易时间
 			objSignReq.setOperator("000001");
 			objSignReq.setTerminalSn("0100000000003949");	// PASMid
