@@ -82,8 +82,8 @@ public class MACUtil {
 			}
 			else {
 				// 16位MAK,为X9.19算法
-				System.arraycopy(mak, 0, makLeft, 0, 8);
-				System.arraycopy(mak, 8, makRight, 0, 8);
+				System.arraycopy(byteMak, 0, makLeft, 0, 8);
+				System.arraycopy(byteMak, 8, makRight, 0, 8);
 			}
 			
 			// MAC Block不能为空
