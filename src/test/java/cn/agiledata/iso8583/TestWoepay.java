@@ -27,23 +27,26 @@ import cn.agiledata.iso8583.util.MACUtil;
 public class TestWoepay extends TestBase {
 	private static final Logger log = Logger.getLogger(TestWoepay.class);
 	
-	private static final String mainKey="9E629829F77A6E67436285292A1CAB54";
+	private static final String mainKey="3E51F23DF70758B9BF20467A8F543DBF";
 	
 	// 以下三个密钥都为明文使用
 	private static final String PIK = "1D1BFD40A0150789";
-	private static final String MAK = "B73622783C5A48D4";
+	private static final String MAK = "D06EFDE3EF7937C46D7A49C76DE99E5E";
 	
+	
+	private static final String terminalSn="A001020150831101";//终端序列号
+	private static final String terminalNo="00068855";//终端号
+	private static final String merNo="301800710005746";//商户号
+
 	@Test
 	public void doubleDesDecrypt(){
 		try {
-/*		batchNo============================>>000001
-pik===============>>B21C399705AB2FE8ED7A17138489EC53
-mak===============>>ACFD330996D61F6B5C73659DB971D23F
-			*/
-			String macKey=DesUtil.doubleDesDecrypt(mainKey, "ACFD330996D61F6B5C73659DB971D23F");
-			String pinKey=DesUtil.doubleDesDecrypt(macKey, "B21C399705AB2FE8ED7A17138489EC53");
+			String macKey=DesUtil.doubleDesDecrypt(mainKey, "CE35D17CF11D2910CD1B995206C300D0");
+			String pinKey=DesUtil.doubleDesDecrypt(mainKey, "B21C399705AB2FE8ED7A17138489EC53");
 			System.out.println("macKey:"+macKey+"  "+"pinKey:"+pinKey);
 			
+			
+			//System.out.println("-----------------"+DesUtil.desDecrypt(mainKey, "CE35D17CF11D2910CD1B995206C300D0"));
 		} catch (DesCryptionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -100,9 +103,9 @@ mak===============>>ACFD330996D61F6B5C73659DB971D23F
 			Date localDate = new Date();
 			objSignReq.setLocalDate(DateFormatUtils.format(localDate, "yyyyMMdd")); //收单方所在地日期
 			objSignReq.setLocalTime(DateFormatUtils.format(localDate, "HHmmss")); //收单方所在地时间
-			objSignReq.setTerminalSn("A001020150727001"); //终端序列号
-			objSignReq.setTerminalNo("00000001");	// 终端号
-			objSignReq.setMerNo("301100110014181");		// 商户号
+			objSignReq.setTerminalSn(terminalSn); //终端序列号
+			objSignReq.setTerminalNo(terminalNo);	// 终端号
+			objSignReq.setMerNo(merNo);		// 商户号
 		
 			// 发送签到请求
 			SignResponse objSignResp;
@@ -113,8 +116,9 @@ mak===============>>ACFD330996D61F6B5C73659DB971D23F
 			System.out.println(ISO8583Util.printBytes(request));
 			
 			ISO8583Socket socket = new ISO8583Socket();
-			socket.connect("123.125.97.253",8785,5000);
 			
+			System.out.println("ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+			socket.connect("123.125.97.242",8785,5000);
 			socket.sendRequest(request);
 
 			// 获取返回结果
@@ -166,18 +170,20 @@ mak===============>>ACFD330996D61F6B5C73659DB971D23F
 			ConsumeRequest objConsume = new ConsumeRequest();
 			objConsume.setPrimaryAcctNo("00000000000000000000");	// 卡号
 			objConsume.setAmount(new BigDecimal("0.01"));	// 金额
-			objConsume.setMobile("");  //手机号
+			objConsume.setMobile("13817563221");  //手机号
 			String[] arrSeqNo = getBatchAndSeqNo(null);
 			objConsume.setBatchNo("000001");	// 批次号
 			objConsume.setTraceNo(arrSeqNo[1]);		// 交易流水号
 			Date transDate = new Date();
 			objConsume.setLocalDate(DateFormatUtils.format(transDate, "yyyyMMdd"));   //受卡方所在地日期
 			objConsume.setLocalTime(DateFormatUtils.format(transDate, "HHmmss")); //受卡方所在地时间 
-			objConsume.setTransType("02"); //交易方式   01.条形码支付  02.NFC刷卡支付
-			objConsume.setTerminalSn("A001020150727001"); //终端序列号
-			objConsume.setTerminalNo("00000001");	// 终端号
-			objConsume.setMerNo("301100110014181");		// 商户号
+			objConsume.setTransType("01"); //交易方式   01.条形码支付  02.NFC刷卡支付
+			objConsume.setBarCode("34314232303434304338");
+			objConsume.setTerminalSn(terminalSn); //终端序列号
+			objConsume.setTerminalNo(terminalNo);	// 终端号
+			objConsume.setMerNo(merNo);		// 商户号
 			objConsume.setMac("0");
+
 			
 			// 发送签到请求
 			ConsumeResponse objConsumeResp;
@@ -189,7 +195,8 @@ mak===============>>ACFD330996D61F6B5C73659DB971D23F
 			log.info(ISO8583Util.bytesToHexString(mac));
 			
 			
-			String strMac = MACUtil.getX919Mac(MAK, ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
+			//String strMac = MACUtil.getX919Mac(MAK, ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
+			String strMac =MACUtil.getCupEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
 			message.setMac(strMac);
 			
 			byte[] request = message.getMessage();
@@ -197,7 +204,7 @@ mak===============>>ACFD330996D61F6B5C73659DB971D23F
 			
 			
 			ISO8583Socket socket = new ISO8583Socket();
-			socket.connect("123.125.97.253",8785,5000);
+			socket.connect("123.125.97.242",8785,5000);
 			
 			socket.sendRequest(request);
 			
