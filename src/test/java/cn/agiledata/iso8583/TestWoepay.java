@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import cn.agiledata.iso8583.util.DesUtil;
 import cn.agiledata.iso8583.util.ISO8583Socket;
 import cn.agiledata.iso8583.util.ISO8583Util;
 import cn.agiledata.iso8583.util.MACUtil;
+import cn.agiledata.iso8583.util.MD5;
 
 /**
  * 沃支付
@@ -44,10 +46,7 @@ public class TestWoepay extends TestBase {
 			String macKey=DesUtil.doubleDesDecrypt(mainKey, "CE35D17CF11D2910CD1B995206C300D0");
 			String pinKey=DesUtil.doubleDesDecrypt(mainKey, "B21C399705AB2FE8ED7A17138489EC53");
 			System.out.println("macKey:"+macKey+"  "+"pinKey:"+pinKey);
-			
-			
-			//System.out.println("-----------------"+DesUtil.desDecrypt(mainKey, "CE35D17CF11D2910CD1B995206C300D0"));
-		} catch (DesCryptionException e) {
+	    } catch (DesCryptionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -162,15 +161,21 @@ public class TestWoepay extends TestBase {
 	}
 	
 	@Test
+	public void testMD5(){
+		String pinData=MD5.sign("111111", "", "UTF-8");
+		System.out.println("==================>>>"+pinData);
+	}
+	
+	@Test
 	/**
 	 * 消费测试
 	 */
 	public void testConsume() throws Exception {
 		try {
 			ConsumeRequest objConsume = new ConsumeRequest();
-			objConsume.setPrimaryAcctNo("00000000000000000000");	// 卡号
+			objConsume.setPrimaryAcctNo("00");	// 卡号
 			objConsume.setAmount(new BigDecimal("0.01"));	// 金额
-			objConsume.setMobile("13817563221");  //手机号
+			//objConsume.setMobile("13817563221");  //手机号
 			String[] arrSeqNo = getBatchAndSeqNo(null);
 			objConsume.setBatchNo("000001");	// 批次号
 			objConsume.setTraceNo(arrSeqNo[1]);		// 交易流水号
@@ -182,6 +187,10 @@ public class TestWoepay extends TestBase {
 			objConsume.setTerminalSn(terminalSn); //终端序列号
 			objConsume.setTerminalNo(terminalNo);	// 终端号
 			objConsume.setMerNo(merNo);		// 商户号
+			String pinData=MD5.sign("111111", "", "UTF-8");
+			//objConsume.setWoePinData(pinData);//扫码支付密码
+			objConsume.setPinData(pinData);  //扫码支付密码
+			objConsume.setSecurityInfo("2600000000000000");
 			objConsume.setMac("0");
 
 			
@@ -196,13 +205,13 @@ public class TestWoepay extends TestBase {
 			
 			
 			//String strMac = MACUtil.getX919Mac(MAK, ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
-			String strMac =MACUtil.getCupEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
+			//String strMac =MACUtil.getCupEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
+			String strMac = MACUtil.getWoeEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
+			
 			message.setMac(strMac);
 			
 			byte[] request = message.getMessage();
-			log.info(ISO8583Util.printBytes(request));
-			
-			
+
 			ISO8583Socket socket = new ISO8583Socket();
 			socket.connect("123.125.97.242",8785,5000);
 			

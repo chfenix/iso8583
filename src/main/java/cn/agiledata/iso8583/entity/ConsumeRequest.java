@@ -16,6 +16,8 @@ import cn.agiledata.iso8583.util.ISO8583Util;
 public class ConsumeRequest extends AbstractRequestMsg {
 
 	private static final long serialVersionUID = 2069184814100605630L;
+	
+	private String woePinData;
 
 	/*
 	 * 主账号
@@ -416,4 +418,14 @@ public class ConsumeRequest extends AbstractRequestMsg {
 	public void setLocalTime(String localTime) {
 		this.localTime = localTime;
 	}
+
+	public String getWoePinData() {
+		return woePinData;
+	}
+
+	public void setWoePinData(String woePinData) {
+		this.woePinData = woePinData;
+	}
+	
+	
 }

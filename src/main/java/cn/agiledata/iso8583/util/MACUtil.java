@@ -286,5 +286,90 @@ public class MACUtil {
 			throw new MacException(e);
 		}
 	}
+	
+	/**
+	 * 沃支付ECB算法
+	 * 
+	 * @param mak  Mac Key 十六进制 8字节
+	 * @param macBlock   需要计算mac的明文域数据 十六进制
+	 * @return mac  十六进制
+	 * @throws MacException
+	 */
+	public static String getWoeEcbMac(String mak,String macBlock) throws MacException {
+		System.out.println("mak====================>>>>>"+mak);
+		
+		
+		try {
+			// 参数检查
+			
+			// MAK必须为16位
+			if(StringUtils.isBlank(mak) || mak.trim().length() != 32) {
+				throw new MacException("MAK length must be 16 Byte! [" + mak + "]");
+			}
+			
+			// MAC明文数据不能为空
+			if(StringUtils.isBlank(macBlock)) {
+				throw new MacException("Mac Data must be not null!");
+			}
+			
+			// 明文不足8字节倍数时补足位数
+			macBlock = ISO8583Util.fillMac(macBlock);
+			System.out.println("macBlock============================>>>>>"+macBlock);
+			
+			
+			// 分段截取8字节，并进行异或 (注：ASCII明文16位十六进制即为8字节)
+			byte[] xorSrc = ISO8583Util.hexStringToByte("0000000000000000");	// 初始异或值为8字节0
+			for (int i = 0; i < macBlock.length()/16; i++) {
+				// 截取8字节数据
+				String strXor = macBlock.substring(i*16,i*16+16);
+				byte[]  xorDest = ISO8583Util.hexStringToByte(strXor);
+				
+				// 与上一次结果进行异或
+				byte[] xorResult=new byte[8];
+				for (int j = 0; j < 8; j++) {
+					xorResult[j] = (byte) (xorSrc[j] ^ xorDest[j]);
+				}
+				
+				// 异或结果作为下次异或元数据
+				xorSrc = xorResult;
+			}
+			
+			// 将最后的异或结果(8字节)转为16进制后获取相关字节数组（16个字节）
+			byte[] xorResult = ISO8583Util.bytesToHexString(xorSrc).getBytes();
+			
+			// 保留结果的前后8个字节
+			byte[] xorRsLeft = new byte[8];	// 异或结果前8字节
+			System.arraycopy(xorResult, 0, xorRsLeft, 0, 8);
+			
+			byte[] xorRsRight = new byte[8];	// 异或结果后8字节
+			System.arraycopy(xorResult, 8, xorRsRight, 0, 8);
+			
+			// 取前8字节使用MAK进行DES
+			xorRsLeft = DesUtil.desEncrypt(ISO8583Util.hexStringToByte(mak), xorRsLeft);
+			
+			// 加密后的结果与后8字节异或
+			byte[] xorMac = new byte[8];
+			for (int j = 0; j < 8; j++) {
+				xorMac[j] = (byte) (xorRsLeft[j] ^ xorRsRight[j]);
+			}
+			
+			// 异或结果使用MAK进行DES
+			xorMac = DesUtil.desEncrypt(ISO8583Util.hexStringToByte(mak), xorMac);
+			
+			// 将异或结果转为十六进制，并获取十六进制字节数组
+			byte[] byteHexMac = ISO8583Util.bytesToHexString(xorMac).getBytes();
+			
+			// 取前8字节作为mac
+			byte[] byteMac = new byte[8];
+			System.arraycopy(byteHexMac, 0, byteMac, 0, 8);
+			
+			return ISO8583Util.bytesToHexString(byteMac);
+
+		}catch (MacException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new MacException(e);
+		}
+	}
 
 }

@@ -27,9 +27,9 @@ public class DesUtil {
 		byte[] result = null;
 		try {
 			// 密钥长度必须为8
-			if(key.length != 8) {
+/*			if(key.length != 8) {
 				throw new DesCryptionException("expected length of des key is 8! [" + key.length +"]");
-			}
+			}*/
 			
 			// 数据长度必须为8的倍数
 			if(data.length%8 != 0) {
