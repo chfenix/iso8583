@@ -7,7 +7,8 @@
 <!-- 签到配置 -->
 <trans code="sign">
 	<head>
-		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6002890000"/>
+		<!-- 生产TPDU：6000250000  测试环境 TPDU：6002890000-->
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000250000"/>
 		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
 	</head>
 	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0800"/> 
@@ -29,7 +30,8 @@
 <!-- 消费配置 -->
 <trans code="consume">
 	<head>
-		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6002890000"/>
+		<!-- 生产TPDU：6000250000  测试环境 TPDU：6002890000-->
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000250000"/>
 		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
 	</head>
 	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0200"/>
@@ -65,14 +67,15 @@
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
 	<mac>
-		<keySequence>type|bitMap|2|3|4|11|12|13|14|15|22|23|25|26|32|35|36|37|38|39|41|42|44|49|52|53|54|60|62|63</keySequence>
+		<keySequence>type|bitMap|3|4|11|22|25|26|35|41|42|49|52|53|60</keySequence>
 	</mac>
 </trans>
 
 <!-- 消费撤销配置 -->
 <trans code="cancel">
 	<head>
-		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6002890000"/>
+		<!-- 生产TPDU：6000250000  测试环境 TPDU：6002890000-->
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000250000"/>
 		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
 	</head>
 	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0200"/>
@@ -115,7 +118,8 @@
 <!-- 消费冲正配置 -->
 <trans code="reverseConsume">
 	<head>
-		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6002890000"/>
+		<!-- 生产TPDU：6000250000  测试环境 TPDU：6002890000-->
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000250000"/>
 		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
 	</head>
 	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0400"/>
@@ -144,14 +148,15 @@
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
 	<mac>
-		<keySequence>type|bitMap|2|3|4|11|12|13|14|15|22|23|25|32|37|38|39|41|42|44|49|52|53|54|60|62</keySequence>
+		<keySequence>type|bitMap|3|4|11|22|25|39|41|42|49|60</keySequence>
 	</mac>
 </trans>
 
 <!-- 消费退货配置 -->
 <trans code="refund">
 	<head>
-		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6002890000"/>
+		<!-- 生产TPDU：6000250000  测试环境 TPDU：6002890000-->
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000250000"/>
 		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
 	</head>
 	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0220"/>
