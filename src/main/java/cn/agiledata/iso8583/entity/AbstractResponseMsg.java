@@ -17,6 +17,8 @@ public abstract class AbstractResponseMsg implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private static final String PREFIX_MSG = "iso8583.respmsg.";
+	
+	private static final String COMMON_ERROR = "ZZ";
 
 	/*
 	 * 交易编码
@@ -71,6 +73,9 @@ public abstract class AbstractResponseMsg implements Serializable {
 				P.load(AbstractResponseMsg.class.getResourceAsStream("/config/" + spec +"/respmsg_" + spec + ".properties"));
 				if (P.containsKey(PREFIX_MSG + this.respCode)) {
 					return "[" + this.respCode + "]" + new String(P.getProperty(PREFIX_MSG + this.respCode).getBytes("UTF-8"),"UTF-8");
+				}
+				else {
+					return "[" + this.respCode + "]" + new String(P.getProperty(PREFIX_MSG + COMMON_ERROR).getBytes("UTF-8"),"UTF-8");
 				}
 			}
 		} catch (IOException e) {

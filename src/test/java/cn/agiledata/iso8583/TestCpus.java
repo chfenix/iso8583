@@ -20,14 +20,22 @@ public class TestCpus extends TestBase {
 		try {
 			// 设置签到报文
 			SignRequest objSignReq = new SignRequest();
-			objSignReq.setMerNo("123456789111115");		// 商户号
-			objSignReq.setTerminalNo("11115007");	// 终端号
+			// 测试环境
+//			objSignReq.setMerNo("123456789111115");		// 商户号
+//			objSignReq.setTerminalNo("11115007");	// 终端号
+			// 生产环境
+			objSignReq.setMerNo("898130155410097");		// 商户号
+			objSignReq.setTerminalNo("91832140");	// 终端号
 			
 			// 使用秒数生成批次号及流水号
-			String[] arrTransNo = getBatchAndSeqNo(null);
+			String[] arrTransNo = getBatchAndSeqNo(null); 
 			System.out.println("batchNo:" + arrTransNo[0] + " traceNo:" + arrTransNo[1]);
 			objSignReq.setBatchNo(arrTransNo[0]);	// 批次号
 			objSignReq.setTraceNo(arrTransNo[1]);	// 交易号
+			
+			// 生产验证
+			objSignReq.setBatchNo("000001");
+			objSignReq.setTraceNo("000001");
 			
 			// 设置签到参数
 			objSignReq.setTransType("00");		// 交易类型:签到
@@ -43,7 +51,10 @@ public class TestCpus extends TestBase {
 			System.out.println(ISO8583Util.printBytes(request));
 			
 			ISO8583Socket socket = new ISO8583Socket();
-			socket.connect("116.228.21.162",4008,5000);
+			// 测试环境
+//			socket.connect("116.228.21.162",4008,5000);
+			// 生产环境
+			socket.connect("11.131.248.41",4101,10000);
 			
 			socket.sendRequest(request);
 			

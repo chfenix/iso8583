@@ -67,7 +67,7 @@
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
 	<mac>
-		<keySequence>type|bitMap|3|4|11|22|25|26|35|41|42|49|52|53|60</keySequence>
+		<keySequence>type|bitMap|2|3|4|11|22|25|26|35|41|42|49|52|53|60</keySequence>
 	</mac>
 </trans>
 
