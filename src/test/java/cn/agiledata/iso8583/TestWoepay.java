@@ -33,7 +33,7 @@ public class TestWoepay extends TestBase {
 	
 	// 以下三个密钥都为明文使用
 	private static final String PIK = "1D1BFD40A0150789";
-	private static final String MAK = "D06EFDE3EF7937C46D7A49C76DE99E5E";
+	private static final String MAK = "E9ED072FDB3294C8F50328877F819C57";
 	
 	
 	private static final String terminalSn="A001020150831101";//终端序列号
