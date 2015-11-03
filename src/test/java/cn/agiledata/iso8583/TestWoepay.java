@@ -28,7 +28,7 @@ import cn.agiledata.iso8583.util.MD5;
  */
 public class TestWoepay extends TestBase {
 	private static final Logger log = Logger.getLogger(TestWoepay.class);
-	
+	//主秘钥
 	private static final String mainKey="3E51F23DF70758B9BF20467A8F543DBF";
 	
 	// 以下三个密钥都为明文使用
@@ -43,8 +43,8 @@ public class TestWoepay extends TestBase {
 	@Test
 	public void doubleDesDecrypt(){
 		try {
-			String macKey=DesUtil.doubleDesDecrypt(mainKey, "CE35D17CF11D2910CD1B995206C300D0");
-			String pinKey=DesUtil.doubleDesDecrypt(mainKey, "B21C399705AB2FE8ED7A17138489EC53");
+			String pinKey=DesUtil.doubleDesDecrypt(mainKey, "EB67391C6EDDABD0C4D3A9D604069F0B");
+			String macKey=DesUtil.doubleDesDecrypt(mainKey, "E340B69454137383600DBD4A639A8D7E");
 			System.out.println("macKey:"+macKey+"  "+"pinKey:"+pinKey);
 	    } catch (DesCryptionException e) {
 			// TODO Auto-generated catch block
@@ -133,6 +133,7 @@ public class TestWoepay extends TestBase {
 			System.out.println(objSignResp.getRespCode() + " "  + objSignResp.getRespMsg());
 			
 			System.out.println("====================>>"+ISO8583Util.printBytes(objSignResp.getWoepayWk()));
+			//获取批次号
 			String respBatchNo=objSignResp.getReserved60().substring(43,49);
 			System.out.println("batchNo============================>>"+respBatchNo);
 			getPIKandMAK(objSignResp,objSignResp.getWoepayWk());
@@ -143,6 +144,11 @@ public class TestWoepay extends TestBase {
 		}
 	}
 	
+	/**
+	 * 获取返回的pik和mak
+	 * @param respObj
+	 * @param reserved63
+	 */
 	private void getPIKandMAK(SignResponse respObj,byte[] reserved63){
 		//PIK
     	byte[] bytePIK = new byte[16];
@@ -163,8 +169,10 @@ public class TestWoepay extends TestBase {
 	@Test
 	public void testMD5(){
 		String pinData=MD5.sign("111111", "", "UTF-8");
-		System.out.println("==================>>>"+pinData);
+		System.out.println("==============asdas====>>>"+pinData);
 	}
+	
+	
 	
 	@Test
 	/**
@@ -172,6 +180,7 @@ public class TestWoepay extends TestBase {
 	 */
 	public void testConsume() throws Exception {
 		try {
+			log.info("================================================");
 			ConsumeRequest objConsume = new ConsumeRequest();
 			objConsume.setPrimaryAcctNo("00");	// 卡号
 			objConsume.setAmount(new BigDecimal("0.01"));	// 金额
@@ -188,7 +197,6 @@ public class TestWoepay extends TestBase {
 			objConsume.setTerminalNo(terminalNo);	// 终端号
 			objConsume.setMerNo(merNo);		// 商户号
 			String pinData=MD5.sign("111111", "", "UTF-8");
-			//objConsume.setWoePinData(pinData);//扫码支付密码
 			objConsume.setPinData(pinData);  //扫码支付密码
 			objConsume.setSecurityInfo("2600000000000000");
 			objConsume.setMac("0");

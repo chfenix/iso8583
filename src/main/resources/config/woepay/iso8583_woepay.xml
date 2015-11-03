@@ -45,7 +45,7 @@
 		<field index="41" alias="terminalNo"  length="8" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
 		<field index="42" alias="merNo"  length="15" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 商户号 -->
 		<field index="44" alias="additionalData"  length="25" lengthType="LLBCD" mode="ASC" req="C" resp="M"/><!-- 附加响应数据 -->
-		<field index="52" alias="pinData"  length="128" lengthType="FIX" mode="BIN" req="C"/><!-- PIN -->
+		<field index="52" alias="pinData"  length="32" lengthType="FIX" mode="BCD" req="C"/><!-- PIN -->
 		<field index="53" alias="securityInfo"  length="16" lengthType="FIX" mode="BCD" req="C" resp="C" /><!-- 安全控制信息 -->
 		<field index="54" alias="balance"  length="20" lengthType="LLLBCD" mode="ASC" align="LEFTZERO" resp="C"/><!-- 余额 -->
 		<field index="58" alias="barCode"  length="20" lengthType="LLLBCD" mode="BCD" /><!-- 条形码 -->
