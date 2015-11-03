@@ -33,23 +33,43 @@ public class TestWoepay extends TestBase {
 	
 	// 以下三个密钥都为明文使用
 	private static final String PIK = "1D1BFD40A0150789";
-	private static final String MAK = "E9ED072FDB3294C8F50328877F819C57";
+	private static final String MAK = "8A1A860B628564521FF73D547C311C13";
 	
 	
 	private static final String terminalSn="A001020150831101";//终端序列号
 	private static final String terminalNo="00068855";//终端号
 	private static final String merNo="301800710005746";//商户号
+	
+	
+	private String encyptMacKey="";
+	
+	
 
 	@Test
 	public void doubleDesDecrypt(){
 		try {
+			String macKey=DesUtil.doubleDesDecrypt(mainKey, "CAD6CACC11B22445359719CAAE6E5006");
 			String pinKey=DesUtil.doubleDesDecrypt(mainKey, "EB67391C6EDDABD0C4D3A9D604069F0B");
-			String macKey=DesUtil.doubleDesDecrypt(mainKey, "E340B69454137383600DBD4A639A8D7E");
 			System.out.println("macKey:"+macKey+"  "+"pinKey:"+pinKey);
 	    } catch (DesCryptionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 获得解密的mac key
+	 * @param encryptMacKey
+	 * @return
+	 */
+	private String getDescryptMacKey(String encryptMacKey){
+		String desMacKey="";
+		try {
+			desMacKey=DesUtil.doubleDesDecrypt(mainKey, encryptMacKey);
+		} catch (DesCryptionException e) {
+			e.printStackTrace();
+		}
+		return desMacKey;
 	}
 	
 	@Test
@@ -164,6 +184,8 @@ public class TestWoepay extends TestBase {
 		
 		respObj.setPinKey(pik);
 		respObj.setMacKey(mak);
+		//密文mak
+		encyptMacKey=mak;
 	}
 	
 	@Test
@@ -181,6 +203,10 @@ public class TestWoepay extends TestBase {
 	public void testConsume() throws Exception {
 		try {
 			log.info("================================================");
+			//签到
+			signIn();
+			String MAK=getDescryptMacKey(encyptMacKey);
+			
 			ConsumeRequest objConsume = new ConsumeRequest();
 			objConsume.setPrimaryAcctNo("00");	// 卡号
 			objConsume.setAmount(new BigDecimal("0.01"));	// 金额
@@ -192,7 +218,7 @@ public class TestWoepay extends TestBase {
 			objConsume.setLocalDate(DateFormatUtils.format(transDate, "yyyyMMdd"));   //受卡方所在地日期
 			objConsume.setLocalTime(DateFormatUtils.format(transDate, "HHmmss")); //受卡方所在地时间 
 			objConsume.setTransType("01"); //交易方式   01.条形码支付  02.NFC刷卡支付
-			objConsume.setBarCode("34314232303434304338");
+			objConsume.setBarCode("33363532333431314631");
 			objConsume.setTerminalSn(terminalSn); //终端序列号
 			objConsume.setTerminalNo(terminalNo);	// 终端号
 			objConsume.setMerNo(merNo);		// 商户号
@@ -211,9 +237,6 @@ public class TestWoepay extends TestBase {
 			byte[] mac = message.getMacPlain();
 			log.info(ISO8583Util.bytesToHexString(mac));
 			
-			
-			//String strMac = MACUtil.getX919Mac(MAK, ISO8583Util.bytesToHexString(mac), MACUtil.FILL_0X80);
-			//String strMac =MACUtil.getCupEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
 			String strMac = MACUtil.getWoeEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
 			
 			message.setMac(strMac);
