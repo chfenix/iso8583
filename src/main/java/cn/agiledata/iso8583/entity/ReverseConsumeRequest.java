@@ -54,6 +54,10 @@ public class ReverseConsumeRequest extends AbstractRequestMsg {
 	 * 冲正原因
 	 */
 	private String respCode;
+	/*
+	 * 终端序列号
+	 */
+	private String terminalSn;
 	
 	/*
 	 * 终端号
@@ -96,6 +100,18 @@ public class ReverseConsumeRequest extends AbstractRequestMsg {
 	 * 原交易日期
 	 */
 	private String originalDate;
+	/*
+	 * 原交易时间 
+	 */
+	private String originalTime;
+	/*
+	 * 原交易批次
+	 */
+	private String orgBatchNo;
+	/*
+	 * 原交易流水
+	 */
+	private String orgTraceNo;
 	
 	/*
 	 * 交易日期
@@ -185,6 +201,15 @@ public class ReverseConsumeRequest extends AbstractRequestMsg {
 		this.respCode = respCode;
 	}
 
+	
+	public String getTerminalSn() {
+		return terminalSn;
+	}
+
+	public void setTerminalSn(String terminalSn) {
+		this.terminalSn = terminalSn;
+	}
+
 	public String getTerminalNo() {
 		return terminalNo;
 	}
@@ -271,6 +296,30 @@ public class ReverseConsumeRequest extends AbstractRequestMsg {
 
 	public void setOriginalDate(String originalDate) {
 		this.originalDate = originalDate;
+	}
+
+	public String getOriginalTime() {
+		return originalTime;
+	}
+
+	public void setOriginalTime(String originalTime) {
+		this.originalTime = originalTime;
+	}
+
+	public String getOrgBatchNo() {
+		return orgBatchNo;
+	}
+
+	public void setOrgBatchNo(String orgBatchNo) {
+		this.orgBatchNo = orgBatchNo;
+	}
+
+	public String getOrgTraceNo() {
+		return orgTraceNo;
+	}
+
+	public void setOrgTraceNo(String orgTraceNo) {
+		this.orgTraceNo = orgTraceNo;
 	}
 	
 	

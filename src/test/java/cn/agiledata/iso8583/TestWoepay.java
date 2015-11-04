@@ -11,6 +11,8 @@ import org.junit.Test;
 
 import cn.agiledata.iso8583.entity.ConsumeRequest;
 import cn.agiledata.iso8583.entity.ConsumeResponse;
+import cn.agiledata.iso8583.entity.ReverseConsumeRequest;
+import cn.agiledata.iso8583.entity.ReverseConsumeResponse;
 import cn.agiledata.iso8583.entity.SignRequest;
 import cn.agiledata.iso8583.entity.SignResponse;
 import cn.agiledata.iso8583.exception.DesCryptionException;
@@ -33,7 +35,7 @@ public class TestWoepay extends TestBase {
 	
 	// 以下三个密钥都为明文使用
 	private static final String PIK = "1D1BFD40A0150789";
-	private static final String MAK = "8A1A860B628564521FF73D547C311C13";
+	private static final String MAK = "F7C7F23E6D80ECD3BC4FD607DA25CBD0";
 	
 	
 	private static final String terminalSn="A001020150831101";//终端序列号
@@ -48,7 +50,7 @@ public class TestWoepay extends TestBase {
 	@Test
 	public void doubleDesDecrypt(){
 		try {
-			String macKey=DesUtil.doubleDesDecrypt(mainKey, "CAD6CACC11B22445359719CAAE6E5006");
+			String macKey=DesUtil.doubleDesDecrypt(mainKey, "030A70A5B4D8799EA71C31E85DE6511F");
 			String pinKey=DesUtil.doubleDesDecrypt(mainKey, "EB67391C6EDDABD0C4D3A9D604069F0B");
 			System.out.println("macKey:"+macKey+"  "+"pinKey:"+pinKey);
 	    } catch (DesCryptionException e) {
@@ -204,21 +206,25 @@ public class TestWoepay extends TestBase {
 		try {
 			log.info("================================================");
 			//签到
-			signIn();
-			String MAK=getDescryptMacKey(encyptMacKey);
+			//signIn();
+			//String MAK=getDescryptMacKey(encyptMacKey);
 			
 			ConsumeRequest objConsume = new ConsumeRequest();
 			objConsume.setPrimaryAcctNo("00");	// 卡号
 			objConsume.setAmount(new BigDecimal("0.01"));	// 金额
-			//objConsume.setMobile("13817563221");  //手机号
 			String[] arrSeqNo = getBatchAndSeqNo(null);
-			objConsume.setBatchNo("000001");	// 批次号
-			objConsume.setTraceNo(arrSeqNo[1]);		// 交易流水号
+			String batchNo="000001";
+			objConsume.setBatchNo(batchNo);	// 批次号
+			String traceNo=arrSeqNo[1];
+			objConsume.setTraceNo(traceNo);		// 交易流水号
 			Date transDate = new Date();
-			objConsume.setLocalDate(DateFormatUtils.format(transDate, "yyyyMMdd"));   //受卡方所在地日期
-			objConsume.setLocalTime(DateFormatUtils.format(transDate, "HHmmss")); //受卡方所在地时间 
+			String localDate=DateFormatUtils.format(transDate, "yyyyMMdd");
+			String localTime=DateFormatUtils.format(transDate, "HHmmss");
+			objConsume.setLocalDate(localDate);   //受卡方所在地日期
+			objConsume.setLocalTime(localTime); //受卡方所在地时间 
+			log.info("batchNo:"+batchNo+" traceNo:"+traceNo+" localDate:"+localDate+" localTime:"+localTime);
 			objConsume.setTransType("01"); //交易方式   01.条形码支付  02.NFC刷卡支付
-			objConsume.setBarCode("31324230373034304331");
+			objConsume.setBarCode("31373534323637463838");
 			objConsume.setTerminalSn(terminalSn); //终端序列号
 			objConsume.setTerminalNo(terminalNo);	// 终端号
 			objConsume.setMerNo(merNo);		// 商户号
@@ -258,7 +264,96 @@ public class TestWoepay extends TestBase {
 			msgResponse.getResponseData(objConsumeResp);
 			objConsumeResp.process();
 			
-			log.info(objConsumeResp.getRespCode()+" "+objConsumeResp.getRespMsg());
+			log.info(objConsumeResp.getRespCode()+" "+objConsumeResp.getRespMsg()+" "+objConsumeResp.getAdditionalData());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	
+	@Test
+	/**
+	 * 消费冲正测试
+	 * @throws Exception
+	 */
+	public void testConsumeReverse() throws Exception {
+		String orgDate="20151104";
+		String orgTime="144350";
+		String orgBatchNo="000001";
+		String orgTraceNo="619430";
+		
+		try {
+			ReverseConsumeRequest objReverse = new ReverseConsumeRequest();
+			objReverse.setPrimaryAcctNo("00");	// 卡号
+			objReverse.setAmount(new BigDecimal("0.01"));	// 金额
+			String[] arrSeqNo = getBatchAndSeqNo(null);
+			objReverse.setTraceNo(arrSeqNo[1]);		// 交易流水号
+			Date transDate = new Date();
+			objReverse.setLocalDate(DateFormatUtils.format(transDate, "yyyyMMdd"));   //受卡方所在地日期
+			objReverse.setLocalTime(DateFormatUtils.format(transDate, "HHmmss")); //受卡方所在地时间 
+			objReverse.setTransType("01"); //交易方式   01.条形码支付  02.NFC刷卡支付
+			objReverse.setTerminalSn(terminalSn); //终端序列号
+			objReverse.setTerminalNo(terminalNo);	// 终端号
+			objReverse.setMerNo(merNo);		// 商户号
+			//原交易日期
+			objReverse.setOriginalDate(orgDate);
+			//原交易时间
+			objReverse.setOriginalTime(orgTime);
+			//原批次号
+			objReverse.setOrgBatchNo(orgBatchNo);
+			//原交易流水号
+			objReverse.setOrgTraceNo(orgTraceNo);
+			objReverse.setMac("0");
+			
+			// 发送消费冲正请求
+			
+			Message8583 message = MessageFactory.createMessage(MessageFactory.MSG_SPEC_WOEPAY, objReverse.getCode(),null);
+			message.fillBodyData(objReverse);
+			message.pack();
+			
+			byte[] mac = message.getMacPlain();
+			log.info(ISO8583Util.bytesToHexString(mac));
+			
+			
+			String strMac = MACUtil.getWoeEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
+			message.setMac(strMac);
+			
+			byte[] request = message.getMessage();
+			log.info(ISO8583Util.printBytes(request));
+			
+			
+			ISO8583Socket socket = new ISO8583Socket();
+			socket.connect("123.125.97.242",8785,5000);
+			
+			socket.sendRequest(request);
+			
+			// 获取返回结果
+			byte[] response = socket.get8583Response(message.getRespLen());
+			Message8583 msgResponse = MessageFactory.createMessage(MessageFactory.MSG_SPEC_WOEPAY, objReverse.getCode(),null);
+			msgResponse.setResponse(response);
+			msgResponse.unpack();
+			
+			ReverseConsumeResponse objReverseResp = new ReverseConsumeResponse();
+			msgResponse.getResponseData(objReverseResp);
+			objReverseResp.process();
+			
+			log.info(objReverseResp.getRespCode()+" "+objReverseResp.getRespMsg()+" "+objReverseResp.getAdditionalData());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	
+	@Test
+	/**
+	 * 消费冲正测试
+	 * @throws Exception
+	 */
+	public void testCancel() throws Exception {
+		try {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
