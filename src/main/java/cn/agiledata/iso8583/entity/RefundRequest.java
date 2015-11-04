@@ -131,6 +131,11 @@ public class RefundRequest extends AbstractRequestMsg {
 	private String originalDate;
 	
 	/*
+	 * 原交易时间 
+	 */
+	private String originalTime;
+	
+	/*
 	 * 终端序列号
 	 */
 	private String terminalSn;
@@ -341,6 +346,14 @@ public class RefundRequest extends AbstractRequestMsg {
 
 	public void setOriginalDate(String originalDate) {
 		this.originalDate = originalDate;
+	}
+	
+	public String getOriginalTime() {
+		return originalTime;
+	}
+
+	public void setOriginalTime(String originalTime) {
+		this.originalTime = originalTime;
 	}
 
 	public String getTerminalSn() {

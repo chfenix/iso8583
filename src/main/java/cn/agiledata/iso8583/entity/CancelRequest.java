@@ -125,6 +125,29 @@ public class CancelRequest extends AbstractRequestMsg {
 	 */
 	private String originalTraceNo;
 	
+	/*
+	 * 原交易日期
+	 */
+	private String originalDate;
+	/*
+	 * 原交易时间 
+	 */
+	private String originalTime;
+	/*
+	 * 终端序列号
+	 */
+	private String terminalSn;
+	/*
+	 * 交易日期
+	 */
+	private String localDate;
+	
+	/*
+	 * 交易时间
+	 */
+	private String localTime;
+
+	
 	public CancelRequest() {
 		this.code = MessageFactory.TRANS_CODE_CANCEL;
 	}
@@ -314,4 +337,46 @@ public class CancelRequest extends AbstractRequestMsg {
 	public void setOriginalTraceNo(String originalTraceNo) {
 		this.originalTraceNo = originalTraceNo;
 	}
+
+	public String getOriginalDate() {
+		return originalDate;
+	}
+
+	public void setOriginalDate(String originalDate) {
+		this.originalDate = originalDate;
+	}
+
+	public String getOriginalTime() {
+		return originalTime;
+	}
+
+	public void setOriginalTime(String originalTime) {
+		this.originalTime = originalTime;
+	}
+
+	public String getTerminalSn() {
+		return terminalSn;
+	}
+
+	public void setTerminalSn(String terminalSn) {
+		this.terminalSn = terminalSn;
+	}
+
+	public String getLocalDate() {
+		return localDate;
+	}
+
+	public void setLocalDate(String localDate) {
+		this.localDate = localDate;
+	}
+
+	public String getLocalTime() {
+		return localTime;
+	}
+
+	public void setLocalTime(String localTime) {
+		this.localTime = localTime;
+	}
+	
+	
 }

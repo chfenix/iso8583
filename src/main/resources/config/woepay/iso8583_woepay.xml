@@ -103,7 +103,7 @@
 		<field index="5" alias="mobile"  length="11" lengthType="FIX" mode="BCD" req="M" resp="M"/><!--手机号 -->
 		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方系统跟踪号 -->
 		<field index="12" alias="localTime"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方所在地时间 -->
-		<field index="13" alias="localDate"  length="4" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方所在地日期 -->
+		<field index="13" alias="localDate"  length="8" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方所在地日期 -->
 		<field index="38" alias="authRespCode"  length="6" lengthType="FIX" mode="ASC" resp="C"/><!-- 授权码 -->
 		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" resp="M"/><!-- 应答码 -->
 		<field index="40" alias="terminalSn"  length="16" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端序列号 -->
@@ -111,9 +111,9 @@
 		<field index="42" alias="merNo"  length="15" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 商户号 -->
 		<field index="44" alias="additionalData"  length="25" lengthType="LLBCD" mode="ASC" req="C" resp="M"/><!-- 附加响应数据 -->
 		<field index="49" alias="currency"  length="3" lengthType="FIX" mode="ASC" req="M" resp="M"  value="156"/><!-- 交易货币代码 -->
-		<field index="60" alias="reserved60"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="C" /><!-- 自定义域 -->
+		<field index="60" alias="reserved60"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="C" combo="'A0000005'+'20150817110012'+'000'+'20150817110012'+'F3'+'01'+batchNo+'00000001'+'0000000000000000'"/><!-- 自定义域 -->
 		<field index="61" alias="reserved61"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="C" /><!-- 自定义域 -->
-		<field index="62" alias="reserved62"  length="999" lengthType="LLLBCD" mode="ASC" resp="M"/><!--原交易信息 -->
+		<field index="62" alias="reserved62"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="C" combo="merNo+terminalNo+originalDate+originalTime+originalBatchNo+originalTraceNo"/><!--原交易信息 -->
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
 	<mac>
@@ -134,7 +134,7 @@
 		<field index="5" alias="mobile"  length="11" lengthType="FIX" mode="BCD" req="M" resp="M"/><!--手机号 -->
 		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方系统跟踪号 -->
 		<field index="12" alias="localTime"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方所在地时间 -->
-		<field index="13" alias="localDate"  length="4" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方所在地日期 -->
+		<field index="13" alias="localDate"  length="8" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 受卡方所在地日期 -->
 		<field index="14" alias="expired"  length="8" lengthType="FIX" mode="BCD" req="C" resp="C"/><!-- 卡有效期 -->
 		<field index="15" alias="settleDate"  length="4" lengthType="FIX" mode="BCD" resp="M"/><!-- 清算日期 -->
 		<field index="22" alias="entryMode"  length="3" lengthType="FIX" mode="BCD" req="M" /><!-- 服务点输入方式码 -->
@@ -153,11 +153,11 @@
 		<field index="53" alias="securityInfo"  length="16" lengthType="FIX" mode="BCD" req="C" resp="C"/><!-- 安全控制信息 -->
 		<field index="60" alias="reserved60"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="C" /><!-- 自定义域 -->
 		<field index="61" alias="reserved61"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="C" /><!-- 自定义域 -->
-		<field index="62" alias="reserved62"  length="999" lengthType="LLLBCD" mode="BCD" req="M" resp="M"/><!-- 自定义域 -->
+		<field index="62" alias="reserved62"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="M"/><!-- 自定义域 -->
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
 	<mac>
-		<keySequence>type|bitMap|2|3|4|5|11|12|13|14|15|22|23|25|26|32|38|39|40|41|42|44|49|52|53|60|61|62|63</keySequence>
+		<keySequence>type|bitMap|2|3|4|5|11|12|13|14|15|22|23|25|26|32|38|39|40|41|42|44|49|52|53|60|61|62</keySequence>
 	</mac>
 </trans>
 </config>

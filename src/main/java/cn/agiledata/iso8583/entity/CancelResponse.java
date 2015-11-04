@@ -25,7 +25,7 @@ public class CancelResponse extends AbstractResponseMsg {
 	/*
 	 * 交易金额
 	 */
-	private BigDecimal amount;
+	private String amount;
 	
 	/*
 	 * 受卡方系统跟踪号
@@ -105,7 +105,7 @@ public class CancelResponse extends AbstractResponseMsg {
 	/*
 	 * MAC
 	 */
-	private String mac;
+	private byte[] mac;
 	
 	public String getPrimaryAcctNo() {
 		return primaryAcctNo;
@@ -123,11 +123,11 @@ public class CancelResponse extends AbstractResponseMsg {
 		this.processCode = processCode;
 	}
 
-	public BigDecimal getAmount() {
+    public String getAmount() {
 		return amount;
 	}
 
-	public void setAmount(BigDecimal amount) {
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
 
@@ -251,11 +251,11 @@ public class CancelResponse extends AbstractResponseMsg {
 		this.reserved63 = reserved63;
 	}
 
-	public String getMac() {
+    public byte[] getMac() {
 		return mac;
 	}
 
-	public void setMac(String mac) {
+	public void setMac(byte[] mac) {
 		this.mac = mac;
 	}
 

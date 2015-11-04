@@ -9,8 +9,11 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import cn.agiledata.iso8583.entity.CancelRequest;
+import cn.agiledata.iso8583.entity.CancelResponse;
 import cn.agiledata.iso8583.entity.ConsumeRequest;
 import cn.agiledata.iso8583.entity.ConsumeResponse;
+import cn.agiledata.iso8583.entity.RefundRequest;
 import cn.agiledata.iso8583.entity.ReverseConsumeRequest;
 import cn.agiledata.iso8583.entity.ReverseConsumeResponse;
 import cn.agiledata.iso8583.entity.SignRequest;
@@ -35,7 +38,7 @@ public class TestWoepay extends TestBase {
 	
 	// 以下三个密钥都为明文使用
 	private static final String PIK = "1D1BFD40A0150789";
-	private static final String MAK = "F7C7F23E6D80ECD3BC4FD607DA25CBD0";
+	private static final String MAK = "767C3B62D6BCD6FD38B5CB3DDA49517A";
 	
 	
 	private static final String terminalSn="A001020150831101";//终端序列号
@@ -44,6 +47,8 @@ public class TestWoepay extends TestBase {
 	
 	
 	private String encyptMacKey="";
+	
+	private String batchNo="000001";
 	
 	
 
@@ -159,7 +164,8 @@ public class TestWoepay extends TestBase {
 			String respBatchNo=objSignResp.getReserved60().substring(43,49);
 			System.out.println("batchNo============================>>"+respBatchNo);
 			getPIKandMAK(objSignResp,objSignResp.getWoepayWk());
-
+			
+			log.info("descryptMacKey========================>>>>>>>>"+getDescryptMacKey(objSignResp.getMacKey()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -213,7 +219,6 @@ public class TestWoepay extends TestBase {
 			objConsume.setPrimaryAcctNo("00");	// 卡号
 			objConsume.setAmount(new BigDecimal("0.01"));	// 金额
 			String[] arrSeqNo = getBatchAndSeqNo(null);
-			String batchNo="000001";
 			objConsume.setBatchNo(batchNo);	// 批次号
 			String traceNo=arrSeqNo[1];
 			objConsume.setTraceNo(traceNo);		// 交易流水号
@@ -224,7 +229,7 @@ public class TestWoepay extends TestBase {
 			objConsume.setLocalTime(localTime); //受卡方所在地时间 
 			log.info("batchNo:"+batchNo+" traceNo:"+traceNo+" localDate:"+localDate+" localTime:"+localTime);
 			objConsume.setTransType("01"); //交易方式   01.条形码支付  02.NFC刷卡支付
-			objConsume.setBarCode("31373534323637463838");
+			objConsume.setBarCode("32383532343435313133");
 			objConsume.setTerminalSn(terminalSn); //终端序列号
 			objConsume.setTerminalNo(terminalNo);	// 终端号
 			objConsume.setMerNo(merNo);		// 商户号
@@ -349,12 +354,147 @@ public class TestWoepay extends TestBase {
 	
 	@Test
 	/**
-	 * 消费冲正测试
+	 * 消费撤销测试
 	 * @throws Exception
 	 */
 	public void testCancel() throws Exception {
+		String orgDate="20151104";
+		String orgTime="180309";
+		String orgBatchNo="000001";
+		String orgTraceNo="631389";
+		
 		try {
+			CancelRequest objCancel = new CancelRequest();
+			objCancel.setPrimaryAcctNo("00");	// 卡号
+			objCancel.setAmount(new BigDecimal("0.01"));	// 金额
+			String[] arrSeqNo = getBatchAndSeqNo(null);
 			
+			objCancel.setBatchNo(batchNo);
+			objCancel.setTraceNo(arrSeqNo[1]);		// 交易流水号
+			Date transDate = new Date();
+			objCancel.setLocalDate(DateFormatUtils.format(transDate, "yyyyMMdd"));   //受卡方所在地日期
+			objCancel.setLocalTime(DateFormatUtils.format(transDate, "HHmmss")); //受卡方所在地时间 
+			objCancel.setTransType("01"); //交易方式   01.条形码支付  02.NFC刷卡支付
+			objCancel.setTerminalSn(terminalSn); //终端序列号
+			objCancel.setTerminalNo(terminalNo);	// 终端号
+			objCancel.setMerNo(merNo);		// 商户号
+			//原交易日期
+			objCancel.setOriginalDate(orgDate);
+			//原交易时间
+			objCancel.setOriginalTime(orgTime);
+			//原批次号
+			objCancel.setOriginalBatchNo(orgBatchNo);
+			//原交易流水号
+			objCancel.setOriginalTraceNo(orgTraceNo);
+			objCancel.setMac("0");
+			
+			// 发送消费冲正请求
+			
+			Message8583 message = MessageFactory.createMessage(MessageFactory.MSG_SPEC_WOEPAY, objCancel.getCode(),null);
+			message.fillBodyData(objCancel);
+			message.pack();
+			
+			byte[] mac = message.getMacPlain();
+			log.info(ISO8583Util.bytesToHexString(mac));
+			
+			
+			String strMac = MACUtil.getWoeEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
+			message.setMac(strMac);
+			
+			byte[] request = message.getMessage();
+			log.info(ISO8583Util.printBytes(request));
+			
+			
+			ISO8583Socket socket = new ISO8583Socket();
+			socket.connect("123.125.97.242",8785,5000);
+			
+			socket.sendRequest(request);
+			
+			// 获取返回结果
+			byte[] response = socket.get8583Response(message.getRespLen());
+			Message8583 msgResponse = MessageFactory.createMessage(MessageFactory.MSG_SPEC_WOEPAY, objCancel.getCode(),null);
+			msgResponse.setResponse(response);
+			msgResponse.unpack();
+			
+			CancelResponse objCancelResp = new CancelResponse();
+			msgResponse.getResponseData(objCancelResp);
+			objCancelResp.process();
+			
+			log.info(objCancelResp.getRespCode()+" "+objCancelResp.getAdditionalData());
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	
+	@Test
+	/**
+	 * 消费退货测试
+	 * @throws Exception
+	 */
+	public void testRefund() throws Exception {
+		String orgDate="20151104";
+		String orgTime="144350";
+		String orgBatchNo="000001";
+		String orgTraceNo="619430";
+		
+		try {
+			RefundRequest objRefund = new RefundRequest();
+			objRefund.setPrimaryAcctNo("00");	// 卡号
+			objRefund.setAmount(new BigDecimal("0.01"));	// 金额
+			String[] arrSeqNo = getBatchAndSeqNo(null);
+			objRefund.setTraceNo(arrSeqNo[1]);		// 交易流水号
+			Date transDate = new Date();
+			objRefund.setLocalDate(DateFormatUtils.format(transDate, "yyyyMMdd"));   //受卡方所在地日期
+			objRefund.setLocalTime(DateFormatUtils.format(transDate, "HHmmss")); //受卡方所在地时间 
+			objRefund.setTransType("01"); //交易方式   01.条形码支付  02.NFC刷卡支付
+			objRefund.setTerminalSn(terminalSn); //终端序列号
+			objRefund.setTerminalNo(terminalNo);	// 终端号
+			objRefund.setMerNo(merNo);		// 商户号
+			//原交易日期
+			objRefund.setOriginalDate(orgDate);
+			//原交易时间
+			objRefund.setOriginalTime(orgTime);
+			//原批次号
+			objRefund.setOriginalBatchNo(orgBatchNo);
+			//原交易流水号
+			objRefund.setOriginalTraceNo(orgTraceNo);
+			objRefund.setMac("0");
+			
+			// 发送消费冲正请求
+			
+			Message8583 message = MessageFactory.createMessage(MessageFactory.MSG_SPEC_WOEPAY, objRefund.getCode(),null);
+			message.fillBodyData(objRefund);
+			message.pack();
+			
+			byte[] mac = message.getMacPlain();
+			log.info(ISO8583Util.bytesToHexString(mac));
+			
+			
+			String strMac = MACUtil.getWoeEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
+			message.setMac(strMac);
+			
+			byte[] request = message.getMessage();
+			log.info(ISO8583Util.printBytes(request));
+			
+			
+			ISO8583Socket socket = new ISO8583Socket();
+			socket.connect("123.125.97.242",8785,5000);
+			
+			socket.sendRequest(request);
+			
+			// 获取返回结果
+			byte[] response = socket.get8583Response(message.getRespLen());
+			Message8583 msgResponse = MessageFactory.createMessage(MessageFactory.MSG_SPEC_WOEPAY, objRefund.getCode(),null);
+			msgResponse.setResponse(response);
+			msgResponse.unpack();
+			
+			ReverseConsumeResponse objRefundResp = new ReverseConsumeResponse();
+			msgResponse.getResponseData(objRefundResp);
+			objRefundResp.process();
+			
+			log.info(objRefundResp.getRespCode()+" "+objRefundResp.getRespMsg()+" "+objRefundResp.getAdditionalData());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
