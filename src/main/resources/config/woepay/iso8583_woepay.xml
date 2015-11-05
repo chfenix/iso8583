@@ -138,7 +138,7 @@
 		<field index="14" alias="expired"  length="8" lengthType="FIX" mode="BCD" req="C" resp="C"/><!-- 卡有效期 -->
 		<field index="15" alias="settleDate"  length="4" lengthType="FIX" mode="BCD" resp="M"/><!-- 清算日期 -->
 		<field index="22" alias="entryMode"  length="3" lengthType="FIX" mode="BCD" req="M" /><!-- 服务点输入方式码 -->
-		<field index="23" alias="seqNo"  length="3" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 卡片序列号 -->
+		<field index="23" alias="seqNo"  length="3" lengthType="FIX" mode="BCD" req="M" resp="M" value="000"/><!-- 卡片序列号 -->
 		<field index="25" alias="conditionMode"  length="2" lengthType="FIX" mode="BCD" req="M"  value="00"/><!-- 服务点条件码 -->
 		<field index="26" alias="pinCaptureCode"  length="2" lengthType="FIX" mode="BCD" req="C" /><!-- 服务点PIN获取码 -->
 		<field index="32" alias="acqIdNo"  length="11" lengthType="LLBCD" mode="BCD" resp="M"/><!-- 受理方标识码 -->
@@ -151,9 +151,9 @@
 		<field index="49" alias="currency"  length="3" lengthType="FIX" mode="ASC" req="M" resp="M"  value="156"/><!-- 交易货币代码 -->
 		<field index="52" alias="pinData"  length="64" lengthType="FIX" mode="BIN" req="C"/><!-- PIN -->
 		<field index="53" alias="securityInfo"  length="16" lengthType="FIX" mode="BCD" req="C" resp="C"/><!-- 安全控制信息 -->
-		<field index="60" alias="reserved60"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="C" /><!-- 自定义域 -->
+		<field index="60" alias="reserved60"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="C" combo="'A0000005'+'20150817110012'+'000'+'20150817110012'+'F3'+'01'+batchNo+'00000001'+'0000000000000000'"/><!-- 自定义域 -->
 		<field index="61" alias="reserved61"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="C" /><!-- 自定义域 -->
-		<field index="62" alias="reserved62"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="M"/><!-- 自定义域 -->
+		<field index="62" alias="reserved62"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="M" combo="merNo+terminalNo+originalDate+originalTime+originalBatchNo+originalTraceNo"/><!-- 自定义域 -->
 		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
 	</body>
 	<mac>

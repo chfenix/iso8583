@@ -38,7 +38,7 @@ public class TestWoepay extends TestBase {
 	
 	// 以下三个密钥都为明文使用
 	private static final String PIK = "1D1BFD40A0150789";
-	private static final String MAK = "767C3B62D6BCD6FD38B5CB3DDA49517A";
+	private static final String MAK = "0B0D8062296801A2DACD86045DEF5894";
 	
 	
 	private static final String terminalSn="A001020150831101";//终端序列号
@@ -229,7 +229,7 @@ public class TestWoepay extends TestBase {
 			objConsume.setLocalTime(localTime); //受卡方所在地时间 
 			log.info("batchNo:"+batchNo+" traceNo:"+traceNo+" localDate:"+localDate+" localTime:"+localTime);
 			objConsume.setTransType("01"); //交易方式   01.条形码支付  02.NFC刷卡支付
-			objConsume.setBarCode("32383532343435313133");
+			objConsume.setBarCode("33393334343737314132");
 			objConsume.setTerminalSn(terminalSn); //终端序列号
 			objConsume.setTerminalNo(terminalNo);	// 终端号
 			objConsume.setMerNo(merNo);		// 商户号
@@ -358,10 +358,10 @@ public class TestWoepay extends TestBase {
 	 * @throws Exception
 	 */
 	public void testCancel() throws Exception {
-		String orgDate="20151104";
-		String orgTime="180309";
+		String orgDate="20151105";
+		String orgTime="101636";
 		String orgBatchNo="000001";
-		String orgTraceNo="631389";
+		String orgTraceNo="689796";
 		
 		try {
 			CancelRequest objCancel = new CancelRequest();
@@ -434,10 +434,10 @@ public class TestWoepay extends TestBase {
 	 * @throws Exception
 	 */
 	public void testRefund() throws Exception {
-		String orgDate="20151104";
-		String orgTime="144350";
+		String orgDate="20151105";
+		String orgTime="112608";
 		String orgBatchNo="000001";
-		String orgTraceNo="619430";
+		String orgTraceNo="693968";
 		
 		try {
 			RefundRequest objRefund = new RefundRequest();
@@ -445,6 +445,7 @@ public class TestWoepay extends TestBase {
 			objRefund.setAmount(new BigDecimal("0.01"));	// 金额
 			String[] arrSeqNo = getBatchAndSeqNo(null);
 			objRefund.setTraceNo(arrSeqNo[1]);		// 交易流水号
+			objRefund.setBatchNo(batchNo);
 			Date transDate = new Date();
 			objRefund.setLocalDate(DateFormatUtils.format(transDate, "yyyyMMdd"));   //受卡方所在地日期
 			objRefund.setLocalTime(DateFormatUtils.format(transDate, "HHmmss")); //受卡方所在地时间 
