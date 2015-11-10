@@ -6,7 +6,7 @@
 	<artifactId>agiledata-iso8583</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.5</version>
-	<name>iso8583</name>
+	<name>agiledata-iso8583</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
