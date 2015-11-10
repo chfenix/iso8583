@@ -312,7 +312,7 @@ public class ConsumeRequest extends AbstractRequestMsg {
 	 * @param pinData
 	 */
 	public void setPinData(String pinData) {
-		this.pinData = pinData;
+		this.pinData = ISO8583Util.byteToBinaryString(ISO8583Util.hexStringToByte(pinData));
 	}
 
 	public String getSecurityInfo() {
