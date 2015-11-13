@@ -38,7 +38,7 @@ public class TestWoepay extends TestBase {
 	
 	// 以下三个密钥都为明文使用
 	private static final String PIK = "1D1BFD40A0150789";
-	private static final String MAK = "0B0D8062296801A2DACD86045DEF5894";
+	private static final String MAK = "5D109E622A5B76B3A74F5B0851D07A0E";
 	
 	
 	private static final String terminalSn="A001020150831101";//终端序列号
@@ -232,12 +232,12 @@ public class TestWoepay extends TestBase {
 			objConsume.setLocalTime(localTime); //受卡方所在地时间 
 			log.info("batchNo:"+batchNo+" traceNo:"+traceNo+" localDate:"+localDate+" localTime:"+localTime);
 			objConsume.setTransType("01"); //交易方式   01.条形码支付  02.NFC刷卡支付
-			objConsume.setBarCode("33393334343737314132");
+			objConsume.setBarCode("32333139383132384433");
 			objConsume.setTerminalSn(terminalSn); //终端序列号
 			objConsume.setTerminalNo(terminalNo);	// 终端号
 			objConsume.setMerNo(merNo);		// 商户号
 			String pinData=MD5.sign("111111", "", "UTF-8");
-			objConsume.setPinData(pinData);  //扫码支付密码
+			objConsume.setWoePinData(pinData);//扫码支付密码
 			objConsume.setSecurityInfo("2600000000000000");
 			objConsume.setMac("0");
 

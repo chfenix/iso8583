@@ -17,6 +17,9 @@ public class ConsumeRequest extends AbstractRequestMsg {
 
 	private static final long serialVersionUID = 2069184814100605630L;
 	
+	/**
+	 * 沃支付密码
+	 */
 	private String woePinData;
 
 	/*
