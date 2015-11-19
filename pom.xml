@@ -7,7 +7,6 @@
 	<packaging>jar</packaging>
 	<version>1.0.5</version>
 	<name>agiledata-iso8583</name>
-	<url>http://maven.apache.org</url>
 
 	<properties>
 		<scmVersion>HEAD</scmVersion>
