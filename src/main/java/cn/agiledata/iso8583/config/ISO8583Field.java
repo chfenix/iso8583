@@ -7,7 +7,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.apache.log4j.Logger;
 
 import cn.agiledata.iso8583.ISO8583Constants;
