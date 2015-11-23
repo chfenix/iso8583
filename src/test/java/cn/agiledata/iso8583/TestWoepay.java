@@ -38,7 +38,7 @@ public class TestWoepay extends TestBase {
 	
 	// 以下三个密钥都为明文使用
 	private static final String PIK = "1D1BFD40A0150789";
-	private static final String MAK = "5D109E622A5B76B3A74F5B0851D07A0E";
+	private static final String MAK = "34850E52A8D0D629C8942CCBEAECD049";
 	
 	
 	private static final String terminalSn="A001020150831101";//终端序列号
@@ -58,7 +58,7 @@ public class TestWoepay extends TestBase {
 	@Test
 	public void doubleDesDecrypt(){
 		try {
-			String macKey=DesUtil.doubleDesDecrypt(mainKey, "030A70A5B4D8799EA71C31E85DE6511F");
+			String macKey=DesUtil.doubleDesDecrypt(mainKey, "F4C15EB5019B5DFB499DA07B864FB903 ");
 			String pinKey=DesUtil.doubleDesDecrypt(mainKey, "EB67391C6EDDABD0C4D3A9D604069F0B");
 			System.out.println("macKey:"+macKey+"  "+"pinKey:"+pinKey);
 	    } catch (DesCryptionException e) {
@@ -189,7 +189,7 @@ public class TestWoepay extends TestBase {
 		
 		//MAK
 		byte[] byteMAK = new byte[16];
-		System.arraycopy(reserved63, 29, byteMAK, 0, 16);
+		System.arraycopy(reserved63, 29, byteMAK, 0, 8);
 		String mak=ISO8583Util.bytesToHexString(byteMAK);
 		System.out.println("mak===============>>"+mak);
 		
@@ -232,7 +232,7 @@ public class TestWoepay extends TestBase {
 			objConsume.setLocalTime(localTime); //受卡方所在地时间 
 			log.info("batchNo:"+batchNo+" traceNo:"+traceNo+" localDate:"+localDate+" localTime:"+localTime);
 			objConsume.setTransType("01"); //交易方式   01.条形码支付  02.NFC刷卡支付
-			objConsume.setBarCode("32333139383132384433");
+			objConsume.setBarCode("32333435363738454142");
 			objConsume.setTerminalSn(terminalSn); //终端序列号
 			objConsume.setTerminalNo(terminalNo);	// 终端号
 			objConsume.setMerNo(merNo);		// 商户号
@@ -251,7 +251,7 @@ public class TestWoepay extends TestBase {
 			byte[] mac = message.getMacPlain();
 			log.info(ISO8583Util.bytesToHexString(mac));
 			
-			String strMac = MACUtil.getWoeEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
+			String strMac = MACUtil.getCupEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
 			
 			message.setMac(strMac);
 			
@@ -325,7 +325,7 @@ public class TestWoepay extends TestBase {
 			log.info(ISO8583Util.bytesToHexString(mac));
 			
 			
-			String strMac = MACUtil.getWoeEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
+			String strMac = MACUtil.getCupEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
 			message.setMac(strMac);
 			
 			byte[] request = message.getMessage();
@@ -361,10 +361,10 @@ public class TestWoepay extends TestBase {
 	 * @throws Exception
 	 */
 	public void testCancel() throws Exception {
-		String orgDate="20151105";
-		String orgTime="101636";
+		String orgDate="20151119";
+		String orgTime="140837";
 		String orgBatchNo="000001";
-		String orgTraceNo="689796";
+		String orgTraceNo="913317";
 		
 		try {
 			CancelRequest objCancel = new CancelRequest();
@@ -401,7 +401,7 @@ public class TestWoepay extends TestBase {
 			log.info(ISO8583Util.bytesToHexString(mac));
 			
 			
-			String strMac = MACUtil.getWoeEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
+			String strMac = MACUtil.getCupEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
 			message.setMac(strMac);
 			
 			byte[] request = message.getMessage();
@@ -476,7 +476,7 @@ public class TestWoepay extends TestBase {
 			log.info(ISO8583Util.bytesToHexString(mac));
 			
 			
-			String strMac = MACUtil.getWoeEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
+			String strMac = MACUtil.getCupEcbMac(MAK, ISO8583Util.bytesToHexString(mac));
 			message.setMac(strMac);
 			
 			byte[] request = message.getMessage();
