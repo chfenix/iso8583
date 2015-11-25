@@ -188,7 +188,7 @@ public class TestWoepay extends TestBase {
 		System.out.println("pik===============>>"+pik);
 		
 		//MAK
-		byte[] byteMAK = new byte[16];
+		byte[] byteMAK = new byte[8];
 		System.arraycopy(reserved63, 29, byteMAK, 0, 8);
 		String mak=ISO8583Util.bytesToHexString(byteMAK);
 		System.out.println("mak===============>>"+mak);
