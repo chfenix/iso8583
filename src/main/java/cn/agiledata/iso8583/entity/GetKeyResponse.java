@@ -1,10 +1,6 @@
 package cn.agiledata.iso8583.entity;
 
-import org.apache.commons.lang3.StringUtils;
-
-import cn.agiledata.iso8583.ISO8583Constants;
 import cn.agiledata.iso8583.MessageFactory;
-import cn.agiledata.iso8583.util.ISO8583Util;
 
 /**
  * Pin Key /Mac Key请求交易反馈类（河北一卡通特有交易）

@@ -1,6 +1,5 @@
 package cn.agiledata.iso8583.entity;
 
-import java.math.BigDecimal;
 
 /**
  * 消费撤销反馈报文
