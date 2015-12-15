@@ -1,0 +1,155 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!-- 云南银通卡POS接口规范 -->
+<config>
+<!-- 公共配置 -->
+<!-- 反馈报文长度占位 -->
+<respLen>2</respLen>
+<!-- 签到配置 -->
+<trans code="sign">
+	<head>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
+		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
+	</head>
+	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0800"/> 
+	<body>
+		<field index="3" alias="processCode"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M" value="920000"/><!--交易处理码 -->
+		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- POS终端流水号 -->
+		<field index="12" alias="localTime"  length="6" lengthType="FIX" mode="BCD" resp="M" value="%dhhmmss"/><!-- 受卡方所在地时间 HHMMSS -->
+		<field index="13" alias="localDate"  length="4" lengthType="FIX" mode="BCD" resp="M" value="%dMMdd"/><!-- 受卡方所在地日期 MMDD-->
+		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" resp="M"/><!-- 应答码 -->
+		<field index="41" alias="terminalNo"  length="8" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
+		<field index="42" alias="merNo"  length="15" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 商户号 -->
+		<field index="60" alias="reserved60"  length="13" lengthType="LLLBCD" mode="BCD" req="M" resp="M"/><!-- 自定义域 -->
+		<field index="62" alias="reserved62"  length="84" lengthType="LLLBCD" mode="BIN" req="C" resp="C"/><!-- 终端信息/终端密钥 -->
+		<field index="63" alias="reserved63"  length="3" lengthType="LLLBCD" mode="ASC" req="M" combo="operator"/><!--操作员代码 -->
+	</body>
+</trans>
+
+<!-- 消费配置 -->
+<trans code="consume">
+	<head>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
+		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
+	</head>
+	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0200"/>
+	<body>
+		<field index="2" alias="primaryAcctNo"  length="19" lengthType="LLBCD" mode="BCD" req="C" resp="M"/><!--卡号 -->
+		<field index="3" alias="processCode"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M" value="003000"/><!--交易处理码 -->
+		<field index="4" alias="amount"  length="12" lengthType="FIX" mode="BCD" req="M" resp="M"/><!--交易金额 -->
+		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- POS终端流水号 -->
+		<field index="12" alias="localTime"  length="6" lengthType="FIX" mode="BCD" resp="M"/><!-- 受卡方所在地时间 HHMMSS-->
+		<field index="13" alias="localDate"  length="4" lengthType="FIX" mode="BCD" resp="M"/><!-- 受卡方所在地日期 MMDD-->
+		<field index="14" alias="expired"  length="4" lengthType="FIX" mode="BCD" req="C" resp="C"/><!-- 卡有效期 YYMM-->
+		<field index="22" alias="entryMode"  length="3" lengthType="FIX" mode="BCD" req="M" value="021"/><!-- 服务点输入方式码 02:磁条 1:交易中包含PIN -->
+		<field index="35" alias="track2Data"  length="37" lengthType="LLBCD" mode="BCD" req="C"/><!-- 2磁道数据 -->
+		<field index="36" alias="track3Data"  length="104" lengthType="LLLBCD" mode="BCD" req="C"/><!-- 3磁道数据 -->
+		<field index="37" alias="refNo"  length="12" lengthType="FIX" mode="ASC" resp="M"/><!-- 中心流水号 -->
+		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" resp="M"/><!-- 应答码 -->
+		<field index="41" alias="terminalNo"  length="8" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
+		<field index="42" alias="merNo"  length="15" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 商户号 -->
+		<field index="52" alias="pinData"  length="64" lengthType="FIX" mode="BIN" req="C"/><!-- PIN -->
+		<field index="54" alias="balance"  length="20" lengthType="LLLBCD" mode="ASC" align="LEFTZERO" resp="C"/><!-- 余额 -->
+		<field index="60" alias="reserved60"  length="17" lengthType="LLLBCD" mode="BCD" req="M" resp="M" /><!-- 自定义域 -->
+		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
+	</body>
+	<mac>
+		<keySequence>type|bitMap|2|3|4|11|12|13|14|22|35|36|37|39|41|42|52|54|60</keySequence>
+	</mac>
+</trans>
+
+<!-- 消费撤销配置 -->
+<trans code="cancel">
+	<head>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
+		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
+	</head>
+	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0200"/>
+	<body>
+		<field index="2" alias="primaryAcctNo"  length="19" lengthType="LLBCD" mode="BCD" req="C" resp="M"/><!-- 卡号 -->
+		<field index="3" alias="processCode"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M" value="200000"/><!--交易处理码 -->
+		<field index="4" alias="amount"  length="12" lengthType="FIX" mode="BCD" req="M" resp="M"/><!--交易金额 -->
+		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- POS终端流水号 -->
+		<field index="12" alias="localTime"  length="6" lengthType="FIX" mode="BCD" resp="M"/><!-- 受卡方所在地时间  HHMMSS-->
+		<field index="13" alias="localDate"  length="4" lengthType="FIX" mode="BCD" resp="M"/><!-- 受卡方所在地日期 MMDD-->
+		<field index="14" alias="expired"  length="4" lengthType="FIX" mode="BCD" req="C" resp="C"/><!-- 卡有效期 YYMM-->
+		<field index="22" alias="entryMode"  length="3" lengthType="FIX" mode="BCD" req="M" value="021"/><!-- 服务点输入方式码 -->
+		<field index="35" alias="track2Data"  length="37" lengthType="LLBCD" mode="BCD" req="C"/><!-- 2磁道数据 -->
+		<field index="36" alias="track3Data"  length="104" lengthType="LLLBCD" mode="BCD" req="C"/><!-- 3磁道数据 -->
+		<field index="37" alias="refNo"  length="12" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 中心流水号 -->
+		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" resp="M"/><!-- 应答码 -->
+		<field index="41" alias="terminalNo"  length="8" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
+		<field index="42" alias="merNo"  length="15" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 商户号 -->
+		<field index="44" alias="additionalData"  length="25" lengthType="LLBCD" mode="ASC" req="C" resp="M"/><!-- 附加响应数据 -->
+		<field index="48" alias="originalInfo"  length="325" lengthType="LLLASC" mode="ASC" req="M" /><!-- 原信息 -->
+		<field index="52" alias="pinData"  length="64" lengthType="FIX" mode="BIN" req="C"/><!-- PIN -->
+		<field index="54" alias="balance"  length="20" lengthType="LLLBCD" mode="ASC" align="LEFTZERO" resp="C"/><!-- 余额 -->
+		<field index="60" alias="reserved60"  length="17" lengthType="LLLBCD" mode="BCD" req="M" resp="M"/><!-- 自定义域 -->
+		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
+	</body>
+	<mac>
+		<keySequence>type|bitMap|2|3|4|11|12|13|14|22|35|36|37|39|41|42|44|48|52|54|60</keySequence>
+	</mac>
+</trans>
+
+<!-- 消费冲正配置 -->
+<trans code="reverseConsume">
+	<head>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
+		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
+	</head>
+	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0400"/>
+	<body>
+		<field index="2" alias="primaryAcctNo"  length="19" lengthType="LLBCD" mode="BCD" req="C" resp="M"/><!-- 卡号 -->
+		<field index="3" alias="processCode"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M" value="000000"/><!--交易处理码 -->
+		<field index="4" alias="amount"  length="12" lengthType="FIX" mode="BCD" req="M" resp="M"/><!--交易金额 -->
+		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- POS终端流水号 -->
+		<field index="12" alias="localTime"  length="6" lengthType="FIX" mode="BCD" resp="M"/><!-- 受卡方所在地时间 HHMMSS-->
+		<field index="13" alias="localDate"  length="4" lengthType="FIX" mode="BCD" resp="M"/><!-- 受卡方所在地日期 MMDD-->
+		<field index="14" alias="expired"  length="4" lengthType="FIX" mode="BCD" req="C" resp="C"/><!-- 卡有效期 YYMM-->
+		<field index="35" alias="track2Data"  length="37" lengthType="LLBCD" mode="BCD" req="C"/><!-- 2磁道数据 -->
+		<field index="36" alias="track3Data"  length="104" lengthType="LLLBCD" mode="BCD" req="C"/><!-- 3磁道数据 -->
+		<field index="37" alias="refNo"  length="12" lengthType="FIX" mode="ASC" resp="M"/><!-- 检索参考号 -->
+		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 冲正原因/应答码 -->
+		<field index="41" alias="terminalNo"  length="8" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
+		<field index="42" alias="merNo"  length="15" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 商户号 -->
+		<field index="48" alias="originalInfo"  length="325" lengthType="LLLASC" mode="ASC" req="M" /><!-- 原信息 -->
+		<field index="60" alias="reserved60"  length="17" lengthType="LLLBCD" mode="BCD" req="M"  /><!-- 自定义域 -->
+		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
+	</body>
+	<mac>
+		<keySequence>type|bitMap|2|3|4|11|12|13|14|35|36|37|39|41|42|48|60</keySequence>
+	</mac>
+</trans>
+
+<!-- 消费退货配置 -->
+<trans code="refund">
+	<head>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
+		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
+	</head>
+	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0220"/>
+	<body>
+		<field index="2" alias="primaryAcctNo"  length="19" lengthType="LLBCD" mode="BCD" req="C" resp="C"/><!-- 卡号 -->
+		<field index="3" alias="processCode"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M" value="210000"/><!--交易处理码 -->
+		<field index="4" alias="amount"  length="12" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- 退货金额 -->
+		<field index="11" alias="traceNo"  length="6" lengthType="FIX" mode="BCD" req="M" resp="M"/><!-- POS终端流水号 -->
+		<field index="12" alias="localTime"  length="6" lengthType="FIX" mode="BCD" resp="M"/><!-- 受卡方所在地时间 HHMMSS-->
+		<field index="13" alias="localDate"  length="4" lengthType="FIX" mode="BCD" resp="M"/><!-- 受卡方所在地日期 MMDD-->
+		<field index="14" alias="expired"  length="4" lengthType="FIX" mode="BCD" req="C" resp="C"/><!-- 卡有效期 YYMM-->
+		<field index="22" alias="entryMode"  length="3" lengthType="FIX" mode="BCD" req="M" value="021"/><!-- 服务点输入方式码 -->
+		<field index="35" alias="track2Data"  length="37" lengthType="LLBCD" mode="BCD" req="C"/><!-- 2磁道数据 -->
+		<field index="36" alias="track3Data"  length="104" lengthType="LLLBCD" mode="BCD" req="C"/><!-- 3磁道数据 -->
+		<field index="37" alias="refNo"  length="12" lengthType="FIX" mode="ASC" req="C" resp="C"/><!-- 检索参考号 -->
+		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" resp="M"/><!-- 应答码 -->
+		<field index="41" alias="terminalNo"  length="8" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
+		<field index="42" alias="merNo"  length="15" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 商户号 -->
+		<field index="48" alias="originalInfo"  length="325" lengthType="LLLASC" mode="ASC" req="M" /><!-- 原信息 -->
+		<field index="52" alias="pinData"  length="64" lengthType="FIX" mode="BIN" req="C"/><!-- PIN -->
+		<field index="60" alias="reserved60"  length="17" lengthType="LLLBCD" mode="BCD" req="M" resp="M" combo="transType+batchNo+'000'"/><!-- 自定义域 -->
+		<field index="64" alias="mac"  length="64" lengthType="FIX" mode="BIN" req="M" resp="C"/><!--MAC -->
+	</body>
+	<mac>
+		<keySequence>type|bitMap|2|3|4|11|12|13|14|22|35|36|37|39|41|42|48|52|60</keySequence>
+	</mac>
+</trans>
+</config>
