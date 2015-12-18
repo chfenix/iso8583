@@ -59,7 +59,7 @@ public class SignResponse extends AbstractResponseMsg {
 	/*
 	 * 自定义域62
 	 */
-	private byte[] reserved62;
+	private String reserved62;
 	
 	/*
 	 * 自定义域63
@@ -97,9 +97,9 @@ public class SignResponse extends AbstractResponseMsg {
 	private String trackKey;
 	
 	/*
-	 * 沃支付签到工作密钥返回域
+	 * 工作密钥域
 	 */
-	private byte[] woepayWk;
+	private byte[] workKey;
 	
 	
 	public SignResponse() {
@@ -170,14 +170,14 @@ public class SignResponse extends AbstractResponseMsg {
 		this.reserved60 = reserved60;
 	}
 
-	public byte[] getReserved62() {
+	public String getReserved62() {
 		return reserved62;
 	}
 
-	public void setReserved62(byte[] reserved62) {
+	public void setReserved62(String reserved62) {
 		this.reserved62 = reserved62;
 	}
-	
+
 	public String getReserved63() {
 		return reserved63;
 	}
@@ -234,17 +234,39 @@ public class SignResponse extends AbstractResponseMsg {
 		this.trackKey = trackKey;
 	}
 	
-
-	public byte[] getWoepayWk() {
-		return woepayWk;
+	public byte[] getWorkKey() {
+		return workKey;
 	}
 
-	public void setWoepayWk(byte[] woepayWk) {
-		this.woepayWk = woepayWk;
+	public void setWorkKey(byte[] workKey) {
+		this.workKey = workKey;
 	}
 
 	@Override
 	public void process() {
+		
+		if(StringUtils.isNotBlank(spec)) {
+			// 报文规范不为空，调用不同报文规范的解析实现
+			
+			if(MessageFactory.MSG_SPEC_CUPS.equals(spec)) {
+				// 银商/银联
+				analyzeCups();
+			}
+			else if (MessageFactory.MSG_SPEC_WOEPAY.equals(spec)) {
+				// 沃支付
+				analyzeWoepay();
+			}
+			else if(MessageFactory.MSG_SPEC_YNYT.equals(spec)) {
+				// 云南银通
+				analyzeYnyt();
+			}
+		}
+	}
+	
+	/**
+	 * 解析银商签到反馈报文相关内容
+	 */
+	private void analyzeCups() {
 		
 		// 解析60域
 		/* ************************
@@ -268,7 +290,7 @@ public class SignResponse extends AbstractResponseMsg {
 		 * 当60.3域填写004时包含PIK、MAK和TDK，共60字节
 		 */
 		
-		if(reserved62 != null && StringUtils.isNotBlank(this.desType)) {
+		if(workKey != null && StringUtils.isNotBlank(this.desType)) {
 			byte[] bytePIK = null;
 			byte[] byteMAK = null;
 			byte[] byteTDK = null;
@@ -281,11 +303,11 @@ public class SignResponse extends AbstractResponseMsg {
 				 */
 				// PIK
 				bytePIK = new byte[8];
-				System.arraycopy(this.reserved62, 0, bytePIK, 0, 8);
+				System.arraycopy(this.workKey, 0, bytePIK, 0, 8);
 				
 				// MAK
 				byteMAK = new byte[8];
-				System.arraycopy(this.reserved62, 12, byteMAK, 0, 8);
+				System.arraycopy(this.workKey, 12, byteMAK, 0, 8);
 			}
 			
 			if(this.desType.equals(ISO8583Constants.DES_TYPE_3DES)) {
@@ -301,11 +323,11 @@ public class SignResponse extends AbstractResponseMsg {
 				 */
 				// PIK
 				bytePIK = new byte[16];
-				System.arraycopy(this.reserved62, 0, bytePIK, 0, 16);
+				System.arraycopy(this.workKey, 0, bytePIK, 0, 16);
 				
 				// MAK
 				byteMAK = new byte[8];
-				System.arraycopy(this.reserved62, 20, byteMAK, 0, 8);
+				System.arraycopy(this.workKey, 20, byteMAK, 0, 8);
 			}
 			
 			if(this.desType.equals(ISO8583Constants.DES_TYPE_3DES_TRACK)) {
@@ -325,15 +347,15 @@ public class SignResponse extends AbstractResponseMsg {
 				 */
 				// PIK
 				bytePIK = new byte[16];
-				System.arraycopy(this.reserved62, 0, bytePIK, 0, 16);
+				System.arraycopy(this.workKey, 0, bytePIK, 0, 16);
 				
 				// MAK
 				byteMAK = new byte[8];
-				System.arraycopy(this.reserved62, 20, byteMAK, 0, 8);
+				System.arraycopy(this.workKey, 20, byteMAK, 0, 8);
 				
 				// TDK
 				byteTDK = new byte[16];
-				System.arraycopy(this.reserved62, 40, byteTDK, 0, 16);
+				System.arraycopy(this.workKey, 40, byteTDK, 0, 16);
 			}
 			
 			if(bytePIK != null) {
@@ -349,6 +371,35 @@ public class SignResponse extends AbstractResponseMsg {
 				this.trackKey = ISO8583Util.bytesToHexString(byteTDK);
 			}
 		}
-		
+	}
+	
+	/**
+	 * 解析沃支付签到反馈内容 
+	 */
+	private void analyzeWoepay() {
+		//PIK
+    	byte[] bytePIK = new byte[16];
+		System.arraycopy(this.workKey, 9, bytePIK, 0, 16);
+		this.pinKey=ISO8583Util.bytesToHexString(bytePIK);
+
+		//MAK
+		byte[] byteMAK = new byte[8];
+		System.arraycopy(this.workKey, 29, byteMAK, 0, 8);
+		this.macKey=ISO8583Util.bytesToHexString(byteMAK);
+	}
+	
+	/**
+	 * 解析云南银通签到反馈内容
+	 */
+	private void analyzeYnyt() {
+		//PIK
+    	byte[] bytePIK = new byte[8];
+		System.arraycopy(this.workKey, 0, bytePIK, 0, 8);
+		this.pinKey=ISO8583Util.bytesToHexString(bytePIK);
+
+		//MAK
+		byte[] byteMAK = new byte[8];
+		System.arraycopy(this.workKey, 12, byteMAK, 0, 8);
+		this.macKey=ISO8583Util.bytesToHexString(byteMAK);
 	}
 }

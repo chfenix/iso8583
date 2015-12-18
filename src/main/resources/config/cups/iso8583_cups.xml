@@ -22,7 +22,7 @@
 		<field index="41" alias="terminalNo"  length="8" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
 		<field index="42" alias="merNo"  length="15" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 商户号 -->
 		<field index="60" alias="reserved60"  length="11" lengthType="LLLBCD" mode="BCD" req="M" resp="M" combo="transType+batchNo+desType"/><!-- 自定义域 -->
-		<field index="62" alias="reserved62"  length="84" lengthType="LLLBCD" mode="BIN" req="C" resp="C"/><!-- 终端信息/终端密钥 -->
+		<field index="62" alias="workKey"  length="84" lengthType="LLLBCD" mode="BIN" req="C" resp="C"/><!-- 终端信息/终端密钥 -->
 		<field index="63" alias="reserved63"  length="3" lengthType="LLLBCD" mode="ASC" req="M" combo="operator"/><!--操作员代码 -->
 	</body>
 </trans>

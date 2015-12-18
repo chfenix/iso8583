@@ -1,10 +1,8 @@
 package cn.agiledata.iso8583;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -162,11 +160,14 @@ public class TestWoepay extends TestBase {
 			
 			System.out.println(objSignResp.getRespCode() + " "  + objSignResp.getRespMsg());
 			
-			System.out.println("====================>>"+ISO8583Util.printBytes(objSignResp.getWoepayWk()));
+			System.out.println("pik===============>>"+objSignResp.getPinKey());
+			System.out.println("mak===============>>"+objSignResp.getMacKey());
+			encyptMacKey=objSignResp.getMacKey();
+			
 			//获取批次号
 			String respBatchNo=objSignResp.getReserved60().substring(43,49);
 			System.out.println("batchNo============================>>"+respBatchNo);
-			getPIKandMAK(objSignResp,objSignResp.getWoepayWk());
+			
 			
 			log.info("descryptMacKey========================>>>>>>>>"+getDescryptMacKey(objSignResp.getMacKey()));
 		} catch (Exception e) {
@@ -175,29 +176,6 @@ public class TestWoepay extends TestBase {
 		}
 	}
 	
-	/**
-	 * 获取返回的pik和mak
-	 * @param respObj
-	 * @param reserved63
-	 */
-	private void getPIKandMAK(SignResponse respObj,byte[] reserved63){
-		//PIK
-    	byte[] bytePIK = new byte[16];
-		System.arraycopy(reserved63, 9, bytePIK, 0, 16);
-		String pik=ISO8583Util.bytesToHexString(bytePIK);
-		System.out.println("pik===============>>"+pik);
-		
-		//MAK
-		byte[] byteMAK = new byte[8];
-		System.arraycopy(reserved63, 29, byteMAK, 0, 8);
-		String mak=ISO8583Util.bytesToHexString(byteMAK);
-		System.out.println("mak===============>>"+mak);
-		
-		respObj.setPinKey(pik);
-		respObj.setMacKey(mak);
-		//密文mak
-		encyptMacKey=mak;
-	}
 	
 	@Test
 	public void testMD5(){

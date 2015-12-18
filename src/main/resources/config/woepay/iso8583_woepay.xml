@@ -19,7 +19,7 @@
 		<field index="41" alias="terminalNo"  length="8" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
 		<field index="42" alias="merNo"  length="15" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 商户号 -->
 		<field index="60" alias="reserved60"  length="999" lengthType="LLLBCD" mode="ASC" req="M" resp="M" combo="'A0000005'+'20150817110012'+'000'+'20150817110012'+'F3'+'01'"/><!-- 自定义域 -->
-		<field index="63" alias="woepayWk"  length="24" lengthType="LLLBCD" mode="BIN" resp="M" /><!--包含MACKEY，PINKEY-->
+		<field index="63" alias="workKey"  length="24" lengthType="LLLBCD" mode="BIN" resp="M" /><!--包含MACKEY，PINKEY-->
 	</body>
 </trans>
 

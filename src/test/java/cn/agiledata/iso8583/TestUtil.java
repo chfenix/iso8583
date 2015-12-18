@@ -83,4 +83,13 @@ public class TestUtil extends TestBase {
 		System.out.println(MACUtil.getCupEcbMac(DesUtil.doubleDesDecrypt("B86B0746B24C3858153668A522AAB748", "6A8774A8D13171FC"), strTest));
 	}
 	
+	@Test
+	public void testDes() {
+		try {
+			System.out.println(DesUtil.desDecrypt("71B69D45A6D423D9", "0000000000000000"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

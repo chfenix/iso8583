@@ -7,8 +7,8 @@
 <!-- 签到配置 -->
 <trans code="sign">
 	<head>
-		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
-		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6002020000"/>
+		<!-- <field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/> -->
 	</head>
 	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0800"/> 
 	<body>
@@ -19,8 +19,7 @@
 		<field index="39" alias="respCode"  length="2" lengthType="FIX" mode="ASC" resp="M"/><!-- 应答码 -->
 		<field index="41" alias="terminalNo"  length="8" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 终端号 -->
 		<field index="42" alias="merNo"  length="15" lengthType="FIX" mode="ASC" req="M" resp="M"/><!-- 商户号 -->
-		<field index="60" alias="reserved60"  length="13" lengthType="LLLBCD" mode="BCD" req="M" resp="M"/><!-- 自定义域 -->
-		<field index="62" alias="reserved62"  length="84" lengthType="LLLBCD" mode="BIN" req="C" resp="C"/><!-- 终端信息/终端密钥 -->
+		<field index="60" alias="workKey"  length="24" lengthType="LLLBCD" mode="BIN" resp="M"/><!-- PIK/MAK -->
 		<field index="63" alias="reserved63"  length="3" lengthType="LLLBCD" mode="ASC" req="M" combo="operator"/><!--操作员代码 -->
 	</body>
 </trans>
@@ -28,8 +27,7 @@
 <!-- 消费配置 -->
 <trans code="consume">
 	<head>
-		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
-		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6002020000"/>
 	</head>
 	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0200"/>
 	<body>
@@ -60,8 +58,7 @@
 <!-- 消费撤销配置 -->
 <trans code="cancel">
 	<head>
-		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
-		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6002020000"/>
 	</head>
 	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0200"/>
 	<body>
@@ -94,8 +91,7 @@
 <!-- 消费冲正配置 -->
 <trans code="reverseConsume">
 	<head>
-		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
-		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6002020000"/>
 	</head>
 	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0400"/>
 	<body>
@@ -124,8 +120,7 @@
 <!-- 消费退货配置 -->
 <trans code="refund">
 	<head>
-		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6000000000"/>
-		<field index="2" alias="HEAD"  length="12" lengthType="FIX" mode="BCD" value="000000000000"/>
+		<field index="1" alias="TPDU"  length="10" lengthType="FIX" mode="BCD" value="6002020000"/>
 	</head>
 	<type  alias="TYPE"  length="4" lengthType="FIX" mode="BCD" value="0220"/>
 	<body>

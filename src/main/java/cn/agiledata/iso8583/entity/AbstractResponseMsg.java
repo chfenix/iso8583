@@ -33,7 +33,7 @@ public abstract class AbstractResponseMsg implements Serializable {
 	/*
 	 * 报文规范
 	 */
-	private String spec;
+	protected String spec;
 
 	public String getCode() {
 		return code;
