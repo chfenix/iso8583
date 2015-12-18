@@ -82,7 +82,7 @@ public class TestYinTong extends TestBase {
 			log.info("MAK Plain:" + MAK);
 			
 			// 校验MAC
-			log.info("PIK MAK:" + DesUtil.desEncrypt("0000000000000000", objSignResp.getPinKey()));
+			log.info("PIK MAK:" + DesUtil.desEncrypt("3030303030303030", objSignResp.getPinKey()));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
